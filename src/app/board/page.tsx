@@ -19,11 +19,10 @@ export default function BoardPage() {
     ]);
   }, []);
   return (
-    <main className="max-w-5xl m-auto px-10">
-      <div className="mt-20">
-        <button className="btn btn-outline btn-info">글작성</button>
+    <main className="max-w-3xl m-auto px-10">
+      <div className="mt-20 mb-10">
+        <button className="btn btn-info px-7 btn-sm text-white">글작성</button>
       </div>
-      <div></div>
       {boards.length ? <BoardList boardList={boards} /> : null}
     </main>
   );

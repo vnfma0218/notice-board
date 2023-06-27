@@ -11,6 +11,20 @@ export const authOptions = {
     // ...add more providers here
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  // callbacks: {
+  //   async session({
+  //     session,
+  //     token,
+  //     user,
+  //   }: {
+  //     session: any;
+  //     token: any;
+  //     user: any;
+  //   }) {
+  //     console.log('session', session);
+  //     return session;
+  //   },
+  // },
 
   //   pages: {
   //     siginIn: '/signin',
