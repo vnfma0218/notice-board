@@ -18,3 +18,32 @@
 
 body {
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+
+.pagination a {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #3abef7;
+  color: #3abef7;
+}
+
+.pagination__link {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.pagination__link--active a {
+  color: #fff;
+  background: #3abef7;
+}
+
+.pagination__link--disabled a {
+  color: rgb(198, 197, 202);
+  border: 1px solid rgb(198, 197, 202);
+}

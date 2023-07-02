@@ -22,10 +22,10 @@ const Header = () => {
             className="mr-5 cursor-pointer hover:text-blue-400"
             onClick={checkSession}
           >
-            메뉴1
+            <Link href="/test">테스트페이지</Link>
           </li>
           <li className="mr-5 cursor-pointer hover:text-blue-400">
-            <Link href={'/board'}>게시판</Link>
+            <Link href="/board">게시판</Link>
           </li>
 
           {session?.user?.name ? (
