@@ -1,5 +1,5 @@
 import { signIn } from 'next-auth/react';
-import { ButtonHTMLAttributes, useRef } from 'react';
+import { useRef } from 'react';
 
 const LoginPopup = () => {
   const closeBtnRef = useRef<HTMLButtonElement>(null);

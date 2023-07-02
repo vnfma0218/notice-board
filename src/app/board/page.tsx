@@ -1,5 +1,6 @@
 'use client';
 import BoardList from '@/components/board/BoardList';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export interface Board {
@@ -21,7 +22,10 @@ export default function BoardPage() {
   return (
     <main className="max-w-3xl m-auto px-10">
       <div className="mt-20 mb-10">
-        <button className="btn btn-info px-7 btn-sm text-white">글작성</button>
+        {/* TODO 로그인 여부에 따라 Rendering 하기 */}
+        <button className="btn btn-info px-7 btn-sm text-white">
+          <Link href={'/board/new'}>작성하기</Link>
+        </button>
       </div>
       {boards.length ? <BoardList boardList={boards} /> : null}
     </main>
