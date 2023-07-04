@@ -1,6 +1,7 @@
 import { IPost } from '@/lib/types/post';
+import Link from 'next/link';
 
-const BoardItem = ({ post }: { post: IPost }) => {
+const PostItem = ({ post }: { post: IPost }) => {
   return (
     <>
       <li className="flex border-gray-950 p-2">
@@ -9,9 +10,11 @@ const BoardItem = ({ post }: { post: IPost }) => {
           <p>{post.commentCount}</p>
         </div>
         <div className="pt-1">
-          <p className="text-xl font-bold cursor-pointer hover:text-blue-400 mb-3">
-            {post?.title}
-          </p>
+          <Link href={`/board/${post.id}`}>
+            <p className="text-xl font-bold cursor-pointer hover:text-blue-400 mb-3">
+              {post?.title}
+            </p>
+          </Link>
           <p className="text-gray-400 cursor-pointer hover:text-blue-400">
             {post.content}
           </p>
@@ -22,4 +25,4 @@ const BoardItem = ({ post }: { post: IPost }) => {
   );
 };
 
-export default BoardItem;
+export default PostItem;

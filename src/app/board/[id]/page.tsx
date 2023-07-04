@@ -47,7 +47,7 @@ export default function BoardDetailPage({
         <div className="flex justify-end mt-10">
           <button
             onClick={() => {
-              router.push('/board');
+              router.back();
             }}
             className="btn btn-outline border-gray-300 px-7 btn-sm mr-3"
           >

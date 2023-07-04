@@ -1,33 +1,60 @@
 'use client';
 import useSWR from 'swr';
-
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getPostList } from '@/api/post';
 import PostList from '@/components/board/PostList';
 import ReactPaginate from 'react-paginate';
 
 export default function BoardPage() {
-  const [searchParams, setSearchParams] = useState({
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams()!;
+  const search = searchParams.get('page');
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const [searchParam, setSearchParam] = useState({
     page: 1,
     limit: 5,
   });
-
-  const { data, isLoading } = useSWR(['/posts', searchParams], () =>
-    getPostList(searchParams)
+  const { data, isLoading } = useSWR(['/posts', searchParam], () =>
+    getPostList(searchParam)
   );
 
+  useEffect(() => {
+    setSearchParam((prev) => ({ ...prev, page: search ? Number(search) : 1 }));
+  }, [search]);
+
   const onPageChange = (page: number) => {
-    setSearchParams((prev) => ({ ...prev, page: page + 1 }));
+    console.log('page', page);
+    if (page + 1 > 1) {
+      console.log('hehehfehfhe');
+      router.push(
+        pathname + '?' + createQueryString('page', (page + 1).toString())
+      );
+    } else {
+      router.push(pathname + '?' + createQueryString('page', '1'));
+    }
+    setSearchParam((prev) => ({ ...prev, page: page + 1 }));
   };
 
   return (
     <main className="max-w-3xl m-auto px-10">
       <div className="mt-20 mb-10">
         {/* TODO 로그인 여부에 따라 Rendering 하기 */}
-        <button className="btn btn-info px-7 btn-sm text-white">
-          <Link href="/board/new">작성하기</Link>
-        </button>
+        <Link href="/board/new">
+          <button className="btn btn-info px-7 btn-sm text-white">
+            작성하기
+          </button>
+        </Link>
       </div>
       {isLoading ? (
         <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2"></span>
@@ -40,6 +67,7 @@ export default function BoardPage() {
           onPageChange={(page) => {
             onPageChange(page.selected);
           }}
+          forcePage={searchParam.page - 1}
           pageRangeDisplayed={5}
           pageCount={data.pageCount}
           previousLabel="<"
