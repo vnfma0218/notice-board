@@ -1,14 +1,17 @@
 'use client';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import LoginPopup from './LoginPopup';
 import Link from 'next/link';
 import Avatar from './Avatar';
 
 const Header = () => {
   const { data: session } = useSession();
+  console.log('session', session);
   const login = () => {
     // signIn('kakao' );
-    window.my_modal_1.showModal();
+    // custom login 페이지로 이동한다 (/login)
+    signIn();
+    // window.my_modal_1.showModal();
   };
   const checkSession = () => {
     console.log('session 체크', session);

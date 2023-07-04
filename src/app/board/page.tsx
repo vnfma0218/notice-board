@@ -34,9 +34,7 @@ export default function BoardPage() {
   }, [search]);
 
   const onPageChange = (page: number) => {
-    console.log('page', page);
     if (page + 1 > 1) {
-      console.log('hehehfehfhe');
       router.push(
         pathname + '?' + createQueryString('page', (page + 1).toString())
       );
