@@ -1,9 +1,12 @@
 'use client';
 import { signup } from '@/api/login';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
-const LoginPage = () => {
+const LoginPage = async () => {
+  const router = useRouter();
+  const [error, setError] = useState('');
   const [isLoginMode, setIsLoginMode] = useState(true);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -15,9 +18,13 @@ const LoginPage = () => {
       const result = await signIn('credentials', {
         email: emailRef.current,
         password: passwordRef.current,
-        redirect: true,
-        callbackUrl: '/',
+        redirect: false,
       });
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        router.push('/');
+      }
     } else {
       signup({ email: emailRef.current!, password: passwordRef.current! }).then(
         (res) => {
@@ -104,15 +111,29 @@ const LoginPage = () => {
         ) : null}
 
         <div className="mt-6 text-right">
+          {error ? error : null}
           <button
             onClick={handleSubmit}
             className="w-full transform rounded-md bg-gray-700 px-4 py-2 tracking-wide text-white transition-colors duration-200 hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
           >
             {isLoginMode ? '로그인' : '회원가입'}
           </button>
+
           <p className="mt-1 text-blue-400" onClick={toggleMode}>
             {isLoginMode ? '회원가입하기' : '로그인하기'}
           </p>
+        </div>
+        {/* 소셜 로그인 */}
+        <div className="text-center">
+          <p>소셜로그인</p>
+          <button
+            className="btn w-full bg-yellow-300"
+            onClick={() => {
+              signIn('kakao');
+            }}
+          >
+            kakao
+          </button>
         </div>
       </div>
     </main>

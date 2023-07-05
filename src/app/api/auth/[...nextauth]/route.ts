@@ -39,20 +39,14 @@ export const authOptions = {
     signIn: '/login',
   },
   secret: process.env.NEXTAUTH_SECRET,
-  // callbacks: {
-  //   async session({
-  //     session,
-  //     token,
-  //     user,
-  //   }: {
-  //     session: any;
-  //     token: any;
-  //     user: any;
-  //   }) {
-  //     console.log('session', session);
-  //     return session;
-  //   },
-  // },
+  callbacks: {
+    async redirect({ baseUrl, url }: any) {
+      if (url === '/login') {
+        return url;
+      }
+      return baseUrl;
+    },
+  },
 
   //   pages: {
   //     siginIn: '/signin',

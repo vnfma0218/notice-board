@@ -1,10 +1,17 @@
 import { signOut } from 'next-auth/react';
+import Image from 'next/image';
 const Avatar = ({ name }: { name: String }) => {
   return (
     <div className="dropdown dropdown-end cursor-pointer">
       <div tabIndex={0} className="avatar placeholder">
-        <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
-          <span className="text-sm">{name}</span>
+        <div className="bg-neutral-focus text-neutral-content rounded-full w-9">
+          <Image
+            priority
+            src="/images/avatar.svg"
+            height={20}
+            width={20}
+            alt="MoreButton"
+          />
         </div>
       </div>
       <ul
@@ -14,7 +21,11 @@ const Avatar = ({ name }: { name: String }) => {
         <li>
           <a>마이페이지</a>
         </li>
-        <li onClick={() => signOut()}>
+        <li
+          onClick={() => {
+            signOut({ callbackUrl: '/login' });
+          }}
+        >
           <a>로그아웃</a>
         </li>
       </ul>
