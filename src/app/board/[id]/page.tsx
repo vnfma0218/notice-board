@@ -16,7 +16,6 @@ export default function BoardDetailPage({
   useEffect(() => {
     const fetchPost = async () => {
       const post = await getPostDetail(params.id);
-      console.log('post', post);
       setPost(post);
     };
     if (params.id) {

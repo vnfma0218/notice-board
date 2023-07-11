@@ -1,6 +1,4 @@
 'use client';
-import { signup } from '@/api/login';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
@@ -15,22 +13,7 @@ const LoginPage = async () => {
   // 수정된 부분
   const handleSubmit = async () => {
     if (isLoginMode) {
-      const result = await signIn('credentials', {
-        email: emailRef.current,
-        password: passwordRef.current,
-        redirect: false,
-      });
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        router.push('/');
-      }
     } else {
-      signup({ email: emailRef.current!, password: passwordRef.current! }).then(
-        (res) => {
-          console.log(res);
-        }
-      );
     }
   };
 
@@ -129,7 +112,13 @@ const LoginPage = async () => {
           <button
             className="btn w-full bg-yellow-300"
             onClick={() => {
-              signIn('kakao');
+              window.location.href =
+                'https://kauth.kakao.com/oauth/authorize?client_id=' +
+                process.env.NEXT_PUBLIC_KAKAO_REST_KEY +
+                '&redirect_uri=' +
+                encodeURIComponent('http://localhost:8080/user/auth/kakao') +
+                '&response_type=code';
+              // signIn('kakao');
             }}
           >
             kakao

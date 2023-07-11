@@ -1,4 +1,3 @@
-import { signIn } from 'next-auth/react';
 import { useRef } from 'react';
 
 const LoginPopup = () => {
@@ -11,7 +10,6 @@ const LoginPopup = () => {
           <button
             className="btn w-full bg-yellow-300"
             onClick={() => {
-              signIn('kakao');
               if (closeBtnRef) {
                 closeBtnRef.current?.click();
               }

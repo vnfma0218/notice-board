@@ -7,6 +7,11 @@ import { getPostList } from '@/api/post';
 import PostList from '@/components/board/PostList';
 import ReactPaginate from 'react-paginate';
 
+interface IPageInfo {
+  page: number;
+  limit: number;
+}
+
 export default function BoardPage() {
   const router = useRouter();
   const pathname = usePathname();
@@ -21,19 +26,22 @@ export default function BoardPage() {
     },
     [searchParams]
   );
-  const [searchParam, setSearchParam] = useState({
+  const [searchParam, setSearchParam] = useState<IPageInfo | null>({
     page: 1,
     limit: 5,
   });
   const { data, isLoading } = useSWR(['/posts', searchParam], () =>
-    getPostList(searchParam)
+    getPostList(searchParam!)
   );
 
   useEffect(() => {
-    setSearchParam((prev) => ({ ...prev, page: search ? Number(search) : 1 }));
+    console.log('setSearchParam');
+    setSearchParam(null);
+    setSearchParam((prev) => ({ ...prev!, page: search ? Number(search) : 1 }));
   }, [search]);
 
   const onPageChange = (page: number) => {
+    console.log('onPageChange');
     if (page + 1 > 1) {
       router.push(
         pathname + '?' + createQueryString('page', (page + 1).toString())
@@ -41,7 +49,7 @@ export default function BoardPage() {
     } else {
       router.push(pathname + '?' + createQueryString('page', '1'));
     }
-    setSearchParam((prev) => ({ ...prev, page: page + 1 }));
+    setSearchParam((prev) => ({ ...prev!, page: page + 1 }));
   };
 
   return (
@@ -65,7 +73,7 @@ export default function BoardPage() {
           onPageChange={(page) => {
             onPageChange(page.selected);
           }}
-          forcePage={searchParam.page - 1}
+          forcePage={searchParam!.page - 1}
           pageRangeDisplayed={5}
           pageCount={data.pageCount}
           previousLabel="<"

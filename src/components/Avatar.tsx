@@ -1,4 +1,3 @@
-import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 const Avatar = ({ name }: { name: String }) => {
   return (
@@ -21,11 +20,7 @@ const Avatar = ({ name }: { name: String }) => {
         <li>
           <a>마이페이지</a>
         </li>
-        <li
-          onClick={() => {
-            signOut({ callbackUrl: '/login' });
-          }}
-        >
+        <li onClick={() => {}}>
           <a>로그아웃</a>
         </li>
       </ul>

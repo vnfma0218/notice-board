@@ -1,19 +1,16 @@
 'use client';
-import { signIn, useSession } from 'next-auth/react';
 import LoginPopup from './LoginPopup';
 import Link from 'next/link';
 import Avatar from './Avatar';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
-  const { data: session } = useSession();
+  const router = useRouter();
   const login = () => {
-    // signIn('kakao' );
-    // custom login 페이지로 이동한다 (/login)
-    signIn();
-    // window.my_modal_1.showModal();
+    router.push('/login');
   };
   const checkSession = () => {
-    console.log('session 체크', session);
+    console.log('session 체크');
   };
   return (
     <header className="flex justify-between items-center px-10 py-5 max-w-5xl m-auto">
@@ -30,13 +27,16 @@ const Header = () => {
             <Link href="/board">게시판</Link>
           </li>
 
-          {session?.user?.email ? (
+          {/* {session?.user?.email ? (
             <Avatar name={session?.user?.name ?? ''} />
           ) : (
             <button className="btn btn-sm	 btn-outline btn-info" onClick={login}>
               로그인
             </button>
-          )}
+          )} */}
+          <button className="btn btn-sm	 btn-outline btn-info" onClick={login}>
+            로그인
+          </button>
         </ul>
       </nav>
       <LoginPopup />

@@ -3,7 +3,7 @@ import PostItem from './PostItem';
 
 const BoardList = ({ posts }: { posts: IPost[] }) => {
   return (
-    <ul className="min-h-[580px]">
+    <ul className="min-h-[500px]">
       {posts.map((post) => {
         return <PostItem post={post} key={post.id} />;
       })}
