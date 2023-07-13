@@ -18,6 +18,7 @@ export const login = async ({
     const res = await axiosInstance({
       url: '/login',
       method: 'post',
+      withCredentials: true,
       data: {
         email,
         password,
@@ -44,6 +45,19 @@ export const signup = async ({
         email,
         password,
       },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};
+
+export const isLoggedIn = async () => {
+  try {
+    const res = await axiosInstance({
+      url: '/user/isLoggedIn',
+      method: 'get',
+      withCredentials: true,
     });
     return res.data;
   } catch (error: any) {
