@@ -13,6 +13,7 @@ export const savePost = async (data: any): Promise<PostResponse> => {
       url: '/post/new',
       method: 'post',
       data,
+      withCredentials: true,
     });
     return res.data;
   } catch (error: any) {
@@ -46,6 +47,7 @@ export const getPostDetail = async (id: string): Promise<IPost> => {
     const res = await axiosInstance<IPost>({
       url: `/post/${id}`,
       method: 'get',
+      withCredentials: true,
     });
     return res.data;
   } catch (error: any) {

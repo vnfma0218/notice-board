@@ -7,19 +7,23 @@ import { isLoggedIn } from '@/api/login';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setLoggedIn } from '@/redux/features/user/userSlice';
 import Avatar from './Avatar';
+import { useEffect } from 'react';
 
 const Header = () => {
   const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const login = () => {
-    router.push('/login');
+    router.push('/signin');
   };
 
   const { data, isLoading } = useSWR(['/isLoggedIn'], () => isLoggedIn());
-  if (data?.isLoggedIn) {
-    dispatch(setLoggedIn());
-  }
+
+  useEffect(() => {
+    if (data?.isLoggedIn) {
+      dispatch(setLoggedIn());
+    }
+  }, [data]);
 
   return (
     <header className="flex justify-between items-center px-10 py-5 max-w-5xl m-auto">

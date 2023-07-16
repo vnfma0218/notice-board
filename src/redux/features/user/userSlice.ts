@@ -12,12 +12,12 @@ export const user = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    reset: () => initialState,
+    setLogout: () => initialState,
     setLoggedIn: (state) => {
       state.isLoggedIn = true;
     },
   },
 });
 
-export const { setLoggedIn } = user.actions;
+export const { setLoggedIn, setLogout } = user.actions;
 export default user.reducer;

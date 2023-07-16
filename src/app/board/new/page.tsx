@@ -34,7 +34,6 @@ export default function NewBoard() {
 
   const submitForm = async () => {
     if (loading) return;
-    console.log(form);
     setLoading(true);
     try {
       const data = await savePost(form);
@@ -44,7 +43,7 @@ export default function NewBoard() {
         window.message_modal.showModal();
       }
       if (data.id) {
-        router.push(`/board/${data.id}`);
+        router.replace(`/board/${data.id}`);
       }
     } catch (error) {
       console.log('error', error);
