@@ -1,8 +1,8 @@
 'use client';
 import { savePost } from '@/api/post';
-import MessageModal from '@/components/MessageModal';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 interface IPostForm {
   title: string;
@@ -12,66 +12,73 @@ interface IPostForm {
 export default function NewBoard() {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
-  const [infoMsg, setInfoMsg] = useState('');
-  const [form, setForm] = useState<IPostForm>({
-    title: '',
-    content: '',
-  });
-  const changeInput = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const id = e.target.id;
-    const value = e.target.value;
-    setForm((prev) => {
-      if (id === 'title') {
-        return { ...prev, title: value };
-      } else {
-        return { ...prev, content: value };
-      }
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IPostForm>();
 
-  const submitForm = async () => {
+  const [loading, setLoading] = useState(false);
+  const submitForm = async (data: IPostForm) => {
     if (loading) return;
     setLoading(true);
     try {
-      const data = await savePost(form);
-      console.log('data', data);
-      if (data.message) {
-        setInfoMsg(data.message);
-        window.message_modal.showModal();
-      }
-      if (data.id) {
-        router.replace(`/board/${data.id}`);
+      const res = await savePost({ title: data.title, content: data.content });
+
+      if (res.id) {
+        router.replace(`/board/${res.id}`);
       }
     } catch (error) {
       console.log('error', error);
     }
     setLoading(false);
   };
-
   return (
     <main className="max-w-3xl m-auto px-10">
-      <div className="mt-20 mb-10">
+      <form onSubmit={handleSubmit(submitForm)} className="mt-20 mb-10">
         <div>
           <label htmlFor="title">제목</label>
           <input
             id="title"
+            {...register('title', {
+              required: {
+                value: true,
+                message: '제목은 5~20자까지 입력해주세요',
+              },
+              minLength: {
+                value: 5,
+                message: '제목은 5~20자까지 입력해주세요',
+              },
+              maxLength: {
+                value: 20,
+                message: '제목은 5~20자까지 입력해주세요',
+              },
+            })}
             type="text"
             placeholder="Type here"
             className="input input-bordered input-md w-full mt-1"
-            onChange={changeInput}
           />
+          <p className="ml-1 text-red-400">{errors.title?.message}</p>
+
           <label htmlFor="content" className="block mt-10">
             내용
           </label>
           <textarea
             id="content"
+            {...register('content', {
+              required: {
+                value: true,
+                message: '내용은 필수 입력사항 입니다.',
+              },
+              maxLength: {
+                value: 200,
+                message: '내용은 최대 200자 까지 작성 가능합니다.',
+              },
+            })}
             className="textarea textarea-bordered textarea-lg  w-full"
             placeholder="내용을 입력해주세요"
-            onChange={changeInput}
           ></textarea>
+          <p className="ml-1 text-red-400">{errors.content?.message}</p>
         </div>
         <div className="flex justify-end mt-10">
           <button
@@ -83,10 +90,7 @@ export default function NewBoard() {
             취소
           </button>
 
-          <button
-            className="btn btn-info px-7 btn-sm text-white"
-            onClick={submitForm}
-          >
+          <button type="submit" className="btn btn-info px-7 btn-sm text-white">
             {loading ? (
               <span className="loading loading-spinner loading-md"></span>
             ) : (
@@ -94,13 +98,7 @@ export default function NewBoard() {
             )}
           </button>
         </div>
-      </div>
-      {/* <ToastMessage message="테스트" alertType={AlertTypes.error} /> */}
-      <MessageModal
-        title={'안내'}
-        message={infoMsg}
-        // alertType={AlertTypes.error}
-      />
+      </form>
     </main>
   );
 }

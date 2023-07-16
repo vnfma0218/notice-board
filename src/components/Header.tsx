@@ -2,7 +2,7 @@
 import useSWR from 'swr';
 import LoginPopup from './LoginPopup';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { isLoggedIn } from '@/api/login';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setLoggedIn } from '@/redux/features/user/userSlice';
@@ -10,6 +10,8 @@ import Avatar from './Avatar';
 import { useEffect } from 'react';
 
 const Header = () => {
+  const authPages = ['/signin', '/signup'];
+  const pathname = usePathname();
   const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -17,7 +19,10 @@ const Header = () => {
     router.push('/signin');
   };
 
-  const { data, isLoading } = useSWR(['/isLoggedIn'], () => isLoggedIn());
+  const { data, isLoading } = useSWR(
+    !authPages.includes(pathname) ? ['/isLoggedIn'] : null,
+    () => isLoggedIn()
+  );
 
   useEffect(() => {
     if (data?.isLoggedIn) {

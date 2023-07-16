@@ -36,7 +36,7 @@ export default function SignupPage() {
 
   const submitForm: SubmitHandler<ILoginForm> = (data: ILoginForm) => {
     if (data.password !== passwordChkRef.current?.value) {
-      setCustomErrors((prev) => ({ ...prev, hasError: true }));
+      return setCustomErrors((prev) => ({ ...prev, hasError: true }));
     }
     setCustomErrors((prev) => ({ ...prev, hasError: false }));
     signup({
@@ -53,6 +53,7 @@ export default function SignupPage() {
             message: '다시 로그인 해주세요',
             hasConfirm: true,
           });
+          window.message_modal.show();
         }
         if (res.resultCode === 4009) {
           setModalInfo({
@@ -60,7 +61,6 @@ export default function SignupPage() {
             message: res.message,
             hasConfirm: false,
           });
-          window.message_modal.show();
         }
       })
       .catch((err) => {

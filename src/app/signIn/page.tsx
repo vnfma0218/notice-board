@@ -26,6 +26,9 @@ export default function LoginPage() {
     login({ email: data.email, password: data.password }).then((res) => {
       if (res.resultCode === 4004) {
         setCustomErrors((prev) => ({ ...prev, hasError: true }));
+      } else {
+        setCustomErrors((prev) => ({ ...prev, hasError: false }));
+        router.push('/');
       }
     });
   };

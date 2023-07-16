@@ -60,6 +60,7 @@ export const logout = async () => {
     const res = await axiosInstance({
       url: '/user/logout',
       method: 'get',
+      withCredentials: true,
     });
     return res.data;
   } catch (error: any) {

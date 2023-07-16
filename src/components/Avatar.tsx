@@ -1,5 +1,11 @@
+import { logout } from '@/api/login';
+import { setLogout } from '@/redux/features/user/userSlice';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 const Avatar = ({ name }: { name: String }) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   return (
     <div className="dropdown dropdown-end cursor-pointer">
       <div tabIndex={0} className="avatar placeholder">
@@ -20,7 +26,14 @@ const Avatar = ({ name }: { name: String }) => {
         <li>
           <a>마이페이지</a>
         </li>
-        <li onClick={() => {}}>
+        <li
+          onClick={() => {
+            logout().then(() => {
+              dispatch(setLogout());
+              router.push('/signin');
+            });
+          }}
+        >
           <a>로그아웃</a>
         </li>
       </ul>

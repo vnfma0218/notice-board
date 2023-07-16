@@ -7,7 +7,10 @@ interface PostResponse {
   message: string;
 }
 // 게시글 등록하기
-export const savePost = async (data: any): Promise<PostResponse> => {
+export const savePost = async (data: {
+  title: string;
+  content: string;
+}): Promise<PostResponse> => {
   try {
     const res = await axiosInstance<PostResponse>({
       url: '/post/new',

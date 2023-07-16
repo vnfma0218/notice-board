@@ -4,6 +4,12 @@ import { getPostDetail } from '@/api/post';
 import { IPost } from '@/lib/types/post';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
+interface IPostForm {
+  email: string;
+  password: string;
+}
 
 export default function BoardDetailPage({
   params,
@@ -11,6 +17,14 @@ export default function BoardDetailPage({
   params: { id: string };
 }) {
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IPostForm>();
+
   const [post, setPost] = useState<IPost>();
 
   useEffect(() => {
@@ -52,7 +66,9 @@ export default function BoardDetailPage({
           >
             목록
           </button>
-          <button className="btn btn-outline px-7 btn-sm">수정</button>
+          {post?.isMine ? (
+            <button className="btn btn-outline px-7 btn-sm">수정</button>
+          ) : null}
         </div>
       </div>
     </main>
