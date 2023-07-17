@@ -57,3 +57,34 @@ export const getPostDetail = async (id: string): Promise<IPost> => {
     return error.response.data;
   }
 };
+// 댓글 등록
+export const postComment = async (data: { text: string; id: string }) => {
+  try {
+    const res = await axiosInstance<IPost>({
+      url: `/post/comment`,
+      method: 'post',
+      withCredentials: true,
+      data,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};
+// 댓글 삭제
+export const deleteComment = async (commentId: string, postId: string) => {
+  try {
+    const res = await axiosInstance<IPost>({
+      url: `/post/comment`,
+      method: 'delete',
+      withCredentials: true,
+      data: {
+        postId,
+        commentId,
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};

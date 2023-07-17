@@ -1,11 +1,12 @@
 'use client';
 import useSWR from 'swr';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getPostList } from '@/api/post';
 import PostList from '@/components/board/PostList';
 import ReactPaginate from 'react-paginate';
+import { useAppSelector } from '@/redux/hooks';
+import MessageModal from '@/components/MessageModal';
 
 interface IPageInfo {
   page: number;
@@ -13,6 +14,7 @@ interface IPageInfo {
 }
 
 export default function BoardPage() {
+  const isLoggedIn = useAppSelector((state) => state.userReducer.isLoggedIn);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams()!;
@@ -52,15 +54,24 @@ export default function BoardPage() {
     setSearchParam((prev) => ({ ...prev!, page: page + 1 }));
   };
 
+  const clickWritePostBtn = () => {
+    if (isLoggedIn) {
+      router.push('/board/new');
+    } else {
+      window.message_modal.show();
+    }
+  };
+
   return (
     <main className="max-w-3xl m-auto px-10">
       <div className="mt-20 mb-10">
         {/* TODO 로그인 여부에 따라 Rendering 하기 */}
-        <Link href="/board/new">
-          <button className="btn btn-info px-7 btn-sm text-white">
-            작성하기
-          </button>
-        </Link>
+        <button
+          onClick={clickWritePostBtn}
+          className="btn btn-info px-7 btn-sm text-white"
+        >
+          작성하기
+        </button>
       </div>
       {isLoading ? (
         <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2"></span>
@@ -85,6 +96,14 @@ export default function BoardPage() {
           activeClassName={'pagination__link--active'}
         />
       ) : null}
+      <MessageModal
+        message="로그인이 필요합니다 로그인 하시겠습니까?"
+        title="안내"
+        hasConfirm={true}
+        confirmBtnClickCb={() => {
+          router.push('/signin');
+        }}
+      />
     </main>
   );
 }

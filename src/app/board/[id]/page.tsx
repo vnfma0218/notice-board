@@ -1,10 +1,12 @@
 'use client';
 import Image from 'next/image';
-import { getPostDetail } from '@/api/post';
-import { IPost } from '@/lib/types/post';
-import { useEffect, useState } from 'react';
+import { deleteComment, getPostDetail } from '@/api/post';
 import { useRouter } from 'next/navigation';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import NewComment from '@/components/board/Comment/NewComment';
+import useSWR from 'swr';
+import CommentList from '@/components/board/Comment/CommentList';
+import MessageModal from '@/components/MessageModal';
+import { useState } from 'react';
 
 interface IPostForm {
   email: string;
@@ -17,25 +19,31 @@ export default function BoardDetailPage({
   params: { id: string };
 }) {
   const router = useRouter();
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<IPostForm>();
-
-  const [post, setPost] = useState<IPost>();
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      const post = await getPostDetail(params.id);
-      setPost(post);
-    };
-    if (params.id) {
-      fetchPost();
-    }
-  }, []);
+  const [selectedCommentId, setSelectedCommentId] = useState('');
+  const { data, isLoading, mutate } = useSWR(`/post/${params.id}`, () =>
+    getPostDetail(params.id)
+  );
+  const onPostComment = () => {
+    mutate();
+  };
+  const onShowDelCommentModal = (commentId: string) => {
+    window.message_modal.show();
+    setSelectedCommentId(commentId);
+  };
+  const onConfirmDeleteComment = () => {
+    console.log('commentId', selectedCommentId);
+    deleteComment(selectedCommentId, params.id).then((res) => {
+      console.log(res);
+      if (res.resultCode === 2000) {
+        mutate();
+      }
+    });
+  };
+  if (isLoading) {
+    return (
+      <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2"></span>
+    );
+  }
   return (
     <main className="max-w-3xl m-auto px-10">
       <div className="mt-20 mb-10 relative">
@@ -51,11 +59,11 @@ export default function BoardDetailPage({
           </div>
 
           <label htmlFor="title">제목</label>
-          <p className="mt-3 text-2xl">{post?.title}</p>
+          <p className="mt-3 text-2xl">{data?.title}</p>
           <label htmlFor="content" className="block mt-10">
             내용
           </label>
-          <p className="mt-3 ">{post?.content}</p>
+          <p className="mt-3 ">{data?.content}</p>
         </div>
         <div className="flex justify-end mt-10">
           <button
@@ -66,11 +74,22 @@ export default function BoardDetailPage({
           >
             목록
           </button>
-          {post?.isMine ? (
+          {data?.isMine ? (
             <button className="btn btn-outline px-7 btn-sm">수정</button>
           ) : null}
         </div>
       </div>
+      <NewComment onPostComment={onPostComment} />
+      <CommentList
+        onDeleteComment={onShowDelCommentModal}
+        comments={data?.comment ?? []}
+      />
+      <MessageModal
+        title="삭제"
+        message="정말 삭제하시겠습니까?"
+        hasConfirm={true}
+        confirmBtnClickCb={onConfirmDeleteComment}
+      />
     </main>
   );
 }
