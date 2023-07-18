@@ -88,3 +88,20 @@ export const deleteComment = async (commentId: string, postId: string) => {
     return error.response.data;
   }
 };
+// 댓글 삭제
+export const updateComment = async (commentId: string, text: string) => {
+  try {
+    const res = await axiosInstance<IPost>({
+      url: `/post/comment`,
+      method: 'put',
+      withCredentials: true,
+      data: {
+        commentId,
+        text,
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};

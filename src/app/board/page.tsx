@@ -32,18 +32,22 @@ export default function BoardPage() {
     page: 1,
     limit: 5,
   });
-  const { data, isLoading } = useSWR(['/posts', searchParam], () =>
-    getPostList(searchParam!)
+  const { data, isLoading } = useSWR(
+    searchParam ? ['/posts', searchParam] : null,
+    () => getPostList(searchParam!)
   );
 
   useEffect(() => {
-    console.log('setSearchParam');
-    setSearchParam(null);
-    setSearchParam((prev) => ({ ...prev!, page: search ? Number(search) : 1 }));
+    if (search) {
+      setSearchParam(null);
+      setSearchParam((prev) => ({
+        ...prev!,
+        page: search ? Number(search) : 1,
+      }));
+    }
   }, [search]);
 
   const onPageChange = (page: number) => {
-    console.log('onPageChange');
     if (page + 1 > 1) {
       router.push(
         pathname + '?' + createQueryString('page', (page + 1).toString())

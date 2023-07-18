@@ -39,6 +39,9 @@ export default function BoardDetailPage({
       }
     });
   };
+  const onSuccessUpdateComment = () => {
+    mutate();
+  };
   if (isLoading) {
     return (
       <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2"></span>
@@ -82,6 +85,7 @@ export default function BoardDetailPage({
       <NewComment onPostComment={onPostComment} />
       <CommentList
         onDeleteComment={onShowDelCommentModal}
+        onSuccessUpdateComment={onSuccessUpdateComment}
         comments={data?.comment ?? []}
       />
       <MessageModal
