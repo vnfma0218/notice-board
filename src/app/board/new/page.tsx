@@ -3,14 +3,15 @@ import { savePost } from '@/api/post';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import TextEditor from '@/components/TextEditor';
 
 interface IPostForm {
   title: string;
-  content: string;
 }
 
 export default function NewBoard() {
   const router = useRouter();
+  const [contents, setContents] = useState('');
 
   const {
     register,
@@ -23,7 +24,7 @@ export default function NewBoard() {
     if (loading) return;
     setLoading(true);
     try {
-      const res = await savePost({ title: data.title, content: data.content });
+      const res = await savePost({ title: data.title, content: contents });
 
       if (res.id) {
         router.replace(`/board/${res.id}`);
@@ -55,30 +56,19 @@ export default function NewBoard() {
               },
             })}
             type="text"
-            placeholder="Type here"
+            placeholder="제목을 입력해주세요"
             className="input input-bordered input-md w-full mt-1"
           />
           <p className="ml-1 text-red-400">{errors.title?.message}</p>
 
-          <label htmlFor="content" className="block mt-10">
-            내용
+          <label htmlFor="content" className="block mt-10 mb-1">
+            본문
           </label>
-          <textarea
-            id="content"
-            {...register('content', {
-              required: {
-                value: true,
-                message: '내용은 필수 입력사항 입니다.',
-              },
-              maxLength: {
-                value: 200,
-                message: '내용은 최대 200자 까지 작성 가능합니다.',
-              },
-            })}
-            className="textarea textarea-bordered textarea-lg  w-full"
-            placeholder="내용을 입력해주세요"
-          ></textarea>
-          <p className="ml-1 text-red-400">{errors.content?.message}</p>
+          <TextEditor
+            value={contents}
+            setContents={setContents}
+            placeholder={'내용을 입력해주세요'}
+          />
         </div>
         <div className="flex justify-end mt-10">
           <button

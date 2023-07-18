@@ -5,6 +5,10 @@ export interface IPost {
   commentCount: number;
   isMine: boolean;
   comment: CommentType[];
+  createdAt: string;
+  user: {
+    nickname: string;
+  };
 }
 
 export type CommentType = {

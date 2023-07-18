@@ -1,4 +1,6 @@
 'use client';
+import ReactQuill from 'react-quill';
+
 import Image from 'next/image';
 import { deleteComment, getPostDetail } from '@/api/post';
 import { useRouter } from 'next/navigation';
@@ -60,13 +62,14 @@ export default function BoardDetailPage({
               alt="MoreButton"
             />
           </div>
+          <ReactQuill value={data?.content} readOnly={true} theme={'bubble'} />
 
-          <label htmlFor="title">제목</label>
+          {/* <label htmlFor="title">제목</label>
           <p className="mt-3 text-2xl">{data?.title}</p>
           <label htmlFor="content" className="block mt-10">
             내용
           </label>
-          <p className="mt-3 ">{data?.content}</p>
+          <p className="mt-3 ">{data?.content}</p> */}
         </div>
         <div className="flex justify-end mt-10">
           <button

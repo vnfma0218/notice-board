@@ -44,3 +44,8 @@
   color: rgb(198, 197, 202);
   border: 1px solid rgb(198, 197, 202);
 }
+
+/* react quill editor */
+.my-editor .ql-editor {
+  min-height: 100px;
+}

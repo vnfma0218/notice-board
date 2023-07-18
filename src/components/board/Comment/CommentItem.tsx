@@ -1,7 +1,10 @@
+import ReactQuill from 'react-quill';
+
 import { updateComment } from '@/api/post';
 import { CommentType } from '@/lib/types/post';
 import { elapsedTime } from '@/lib/utils/common';
 import { useState } from 'react';
+import TextEditor from '@/components/TextEditor';
 
 const CommentItem = ({
   comment,
@@ -61,12 +64,7 @@ const CommentItem = ({
         <div className="mt-5">
           {updateMode ? (
             <div>
-              <textarea
-                className="textarea textarea-bordered w-full"
-                placeholder="답변 작성하기"
-                value={updateText}
-                onChange={(e) => setUpdateText(e.target.value)}
-              ></textarea>
+              <TextEditor value={updateText} setContents={setUpdateText} />
               <div className="flex justify-end">
                 <button
                   className="btn mr-2"
@@ -82,7 +80,7 @@ const CommentItem = ({
               </div>
             </div>
           ) : (
-            <span>{comment.text}</span>
+            <ReactQuill value={comment.text} readOnly={true} theme={'bubble'} />
           )}
         </div>
       </li>
