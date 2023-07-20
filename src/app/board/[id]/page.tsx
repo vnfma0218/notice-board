@@ -62,14 +62,8 @@ export default function BoardDetailPage({
               alt="MoreButton"
             />
           </div>
+          <p className="mb-10 text-4xl">{data?.title}</p>
           <ReactQuill value={data?.content} readOnly={true} theme={'bubble'} />
-
-          {/* <label htmlFor="title">제목</label>
-          <p className="mt-3 text-2xl">{data?.title}</p>
-          <label htmlFor="content" className="block mt-10">
-            내용
-          </label>
-          <p className="mt-3 ">{data?.content}</p> */}
         </div>
         <div className="flex justify-end mt-10">
           <button

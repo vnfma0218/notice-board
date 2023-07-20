@@ -5,6 +5,7 @@ import { CommentType } from '@/lib/types/post';
 import { elapsedTime } from '@/lib/utils/common';
 import { useState } from 'react';
 import TextEditor from '@/components/TextEditor';
+import Image from 'next/image';
 
 const CommentItem = ({
   comment,
@@ -38,11 +39,68 @@ const CommentItem = ({
   return (
     <div>
       <li className="border-b p-3">
-        <div className="flex justify-between">
+        <Image
+          priority
+          src="/images/update.svg"
+          height={20}
+          width={20}
+          alt="updateBtn"
+        />
+        <div className="flex justify-between items-center">
           <span>작성자: {comment.user.nickname}</span>
-          <div>
-            <span className="text-sm">{elapsedTime(comment.createdAt)}</span>
-            {comment.isMine ? (
+          <div className="flex items-center">
+            <span className="text-sm mr-2">
+              {elapsedTime(comment.createdAt)}
+            </span>
+
+            <div className="dropdown dropdown-bottom dropdown-end">
+              <label tabIndex={0} className="m-1 cursor-pointer">
+                <Image
+                  priority
+                  src="/images/more_btn.svg"
+                  height={20}
+                  width={20}
+                  alt="MoreButton"
+                />
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 text-center rounded-sm"
+              >
+                <li
+                  onClick={onChangeUpdateMode}
+                  className="w-20 mb-3 cursor-pointer"
+                >
+                  <div className="hover:text-blue-400">
+                    <Image
+                      priority
+                      src="/images/update.svg"
+                      height={13}
+                      width={13}
+                      alt="updateBtn"
+                    />
+                    수정
+                  </div>
+                </li>
+                <li
+                  onClick={showDeletePopup}
+                  className="w-20 cursor-pointer hover:text-blue-400"
+                >
+                  <div className="hover:text-blue-400">
+                    <Image
+                      priority
+                      src="/images/delete.svg"
+                      height={13}
+                      width={13}
+                      alt="updateBtn"
+                    />
+                    삭제
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* {comment.isMine ? (
               <button
                 onClick={showDeletePopup}
                 className="btn btn-sm btn-warning"
@@ -57,7 +115,7 @@ const CommentItem = ({
               >
                 수정
               </button>
-            ) : null}
+            ) : null} */}
           </div>
         </div>
 

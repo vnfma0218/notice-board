@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   const { data, isLoading } = useSWR(
-    !authPages.includes(pathname) ? ['/isLoggedIn'] : null,
+    !authPages.includes(pathname) && !isLogin ? ['/isLoggedIn'] : null,
     () => isLoggedIn()
   );
 
@@ -45,7 +45,7 @@ const Header = () => {
           {isLoading ? (
             <span className="loading loading-spinner loading-sm"></span>
           ) : isLogin ? (
-            <Avatar name={'test'} />
+            <Avatar />
           ) : (
             <button className="btn btn-sm	 btn-outline btn-info" onClick={login}>
               로그인

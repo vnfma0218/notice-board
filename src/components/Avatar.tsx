@@ -3,7 +3,7 @@ import { setLogout } from '@/redux/features/user/userSlice';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-const Avatar = ({ name }: { name: String }) => {
+const Avatar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   return (
@@ -23,7 +23,11 @@ const Avatar = ({ name }: { name: String }) => {
         tabIndex={0}
         className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
       >
-        <li>
+        <li
+          onClick={() => {
+            router.push('/myPage');
+          }}
+        >
           <a>마이페이지</a>
         </li>
         <li
