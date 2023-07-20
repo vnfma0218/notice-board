@@ -1,18 +1,24 @@
+import useSWR from 'swr';
+
 import { logout } from '@/api/login';
 import { setLogout } from '@/redux/features/user/userSlice';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
+import { getProfile } from '@/api/user';
+
 const Avatar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { data, mutate } = useSWR('/profile', () => getProfile());
+
   return (
     <div className="dropdown dropdown-end cursor-pointer">
       <div tabIndex={0} className="avatar placeholder">
         <div className="bg-neutral-focus text-neutral-content rounded-full w-9">
           <Image
             priority
-            src="/images/avatar.svg"
+            src={data?.avatar ? data?.avatar : '/images/avatar.svg'}
             height={20}
             width={20}
             alt="MoreButton"
@@ -34,6 +40,7 @@ const Avatar = () => {
           onClick={() => {
             logout().then(() => {
               dispatch(setLogout());
+              mutate();
               router.push('/signin');
             });
           }}

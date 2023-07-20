@@ -22,9 +22,6 @@ const PostItem = ({ post }: { post: IPost }) => {
               {post?.title}
             </p>
           </Link>
-          {/* <p className="text-gray-400 cursor-pointer hover:text-blue-400">
-            {post.content}
-          </p> */}
         </div>
       </li>
       <div className="divider m-0"></div>

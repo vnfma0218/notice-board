@@ -1,8 +1,9 @@
 'use client';
 import { login } from '@/api/login';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import useSWR from 'swr';
 
 interface ILoginForm {
   email: string;
@@ -16,6 +17,7 @@ export default function LoginPage() {
     watch,
     formState: { errors },
   } = useForm<ILoginForm>();
+  const { mutate } = useSWR('/profile');
 
   const [customErrors, setCustomErrors] = useState({
     hasError: false,
@@ -28,6 +30,7 @@ export default function LoginPage() {
         setCustomErrors((prev) => ({ ...prev, hasError: true }));
       } else {
         setCustomErrors((prev) => ({ ...prev, hasError: false }));
+        mutate();
         router.push('/');
       }
     });

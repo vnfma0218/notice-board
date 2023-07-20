@@ -1,12 +1,17 @@
 'use client';
-import Avatar from '@/components/Avatar';
+import useSWR from 'swr';
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { getProfile, updateProfile } from '@/api/user';
 
 export default function MyPage() {
   const [imgFile, setImgFile] = useState<File | null>();
   const fileInput = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>('');
+  const [nickname, setNickname] = useState<string>('');
+
+  const { data } = useSWR('/profile', () => getProfile());
+
   useEffect(() => {
     if (imgFile) {
       const reader = new FileReader();
@@ -31,6 +36,18 @@ export default function MyPage() {
         setImgFile(null);
       }
     }
+  };
+  const onSubmit = () => {
+    const frm = new FormData();
+
+    const name = nickname ? nickname : data.nickname;
+    frm.append('nickname', name);
+    if (imgFile) {
+      frm.append('file', imgFile);
+    }
+    updateProfile(frm).then((res) => {
+      console.log(res);
+    });
   };
   return (
     <main className="flex m-auto px-20 mt-10">
@@ -81,7 +98,7 @@ export default function MyPage() {
               </label>
               <input
                 type="text"
-                placeholder="lpr0218@naver.com"
+                placeholder={data?.email}
                 className="input input-bordered w-full max-w-sm font-bold"
                 disabled
               />
@@ -92,6 +109,10 @@ export default function MyPage() {
               </label>
               <input
                 type="text"
+                value={nickname ? nickname : data?.nickname ?? ''}
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                }}
                 placeholder="Type here"
                 className="input input-bordered w-full max-w-sm"
               />
@@ -103,7 +124,13 @@ export default function MyPage() {
               <Image
                 className="cursor-pointer rounded-full"
                 priority
-                src={previewImage ? previewImage : '/images/avatar.svg'}
+                src={
+                  previewImage
+                    ? previewImage
+                    : data?.avatar
+                    ? data?.avatar
+                    : '/images/avatar.svg'
+                }
                 height={120}
                 width={120}
                 alt="MoreButton"
@@ -121,7 +148,10 @@ export default function MyPage() {
           </div>
         </div>
         <div className="text-right mt-10">
-          <button className="mt-4 btn btn-info btn-sm text-white px-10">
+          <button
+            onClick={onSubmit}
+            className="mt-4 btn btn-info btn-sm text-white px-10"
+          >
             저장
           </button>
         </div>
