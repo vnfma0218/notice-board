@@ -3,8 +3,12 @@ import useSWR from 'swr';
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { getProfile, updateProfile } from '@/api/user';
+import { useAppDispatch } from '@/redux/hooks';
+import { showModal } from '@/redux/features/modal/modalSlice';
+import MessageModal from '@/components/MessageModal';
 
 export default function MyPage() {
+  const dispatch = useAppDispatch();
   const [imgFile, setImgFile] = useState<File | null>();
   const fileInput = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>('');
@@ -13,6 +17,10 @@ export default function MyPage() {
   const { data } = useSWR('/profile', () => getProfile());
 
   useEffect(() => {
+    if (data?.nickname) {
+      setNickname(data.nickname);
+    }
+
     if (imgFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -22,7 +30,7 @@ export default function MyPage() {
     } else {
       setPreviewImage(null);
     }
-  }, [imgFile]);
+  }, [imgFile, data]);
 
   const onClickAvatar = () => {
     fileInput.current?.click();
@@ -46,9 +54,12 @@ export default function MyPage() {
       frm.append('file', imgFile);
     }
     updateProfile(frm).then((res) => {
-      console.log(res);
+      if (res.resultCode === 2000) {
+        dispatch(showModal({ message: '변경하였습니다', title: '완료' }));
+      }
     });
   };
+
   return (
     <main className="flex m-auto px-20 mt-10">
       <section className="side-menu basis-1/3 h-screen min-w-[250px] pr-10">
@@ -109,13 +120,21 @@ export default function MyPage() {
               </label>
               <input
                 type="text"
-                value={nickname ? nickname : data?.nickname ?? ''}
+                value={nickname}
                 onChange={(e) => {
                   setNickname(e.target.value);
                 }}
                 placeholder="Type here"
                 className="input input-bordered w-full max-w-sm"
               />
+            </div>
+            <div className="text-right mt-10">
+              <button
+                onClick={onSubmit}
+                className="mt-4 btn btn-info btn-sm text-white px-10"
+              >
+                저장
+              </button>
             </div>
           </div>
           {/* image */}
@@ -129,10 +148,10 @@ export default function MyPage() {
                     ? previewImage
                     : data?.avatar
                     ? data?.avatar
-                    : '/images/avatar.svg'
+                    : '/images/profile_default.svg'
                 }
-                height={120}
-                width={120}
+                height={170}
+                width={170}
                 alt="MoreButton"
                 onClick={onClickAvatar}
               />
@@ -147,15 +166,8 @@ export default function MyPage() {
             />
           </div>
         </div>
-        <div className="text-right mt-10">
-          <button
-            onClick={onSubmit}
-            className="mt-4 btn btn-info btn-sm text-white px-10"
-          >
-            저장
-          </button>
-        </div>
       </section>
+      <MessageModal />
     </main>
   );
 }

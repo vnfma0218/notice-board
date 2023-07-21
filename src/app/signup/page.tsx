@@ -1,6 +1,8 @@
 'use client';
 import { signup } from '@/api/login';
 import MessageModal from '@/components/MessageModal';
+import { showModal } from '@/redux/features/modal/modalSlice';
+import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -12,6 +14,8 @@ interface ILoginForm {
 }
 export default function SignupPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const passwordChkRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -48,19 +52,23 @@ export default function SignupPage() {
         // 성공하면 모달창 띄우고 로그인 페이지로
         console.log('res', res);
         if (res.resultCode === 2000) {
-          setModalInfo({
-            title: '회원가입 완료',
-            message: '다시 로그인 해주세요',
-            hasConfirm: true,
-          });
-          window.message_modal.show();
+          dispatch(
+            showModal({
+              title: '회원가입 완료',
+              message: '다시 로그인 해주세요',
+              hasConfirm: true,
+              confirmCallback: onSuccessSignup,
+            })
+          );
         }
         if (res.resultCode === 4009) {
-          setModalInfo({
-            title: '안내',
-            message: res.message,
-            hasConfirm: false,
-          });
+          dispatch(
+            showModal({
+              title: '안내',
+              message: res.message,
+              hasConfirm: false,
+            })
+          );
         }
       })
       .catch((err) => {
@@ -182,12 +190,7 @@ export default function SignupPage() {
         </div>
       </form>
 
-      <MessageModal
-        title={modalInfo.title}
-        message={modalInfo.message}
-        hasConfirm={modalInfo.hasConfirm}
-        confirmBtnClickCb={onSuccessSignup}
-      />
+      <MessageModal />
     </main>
   );
 }

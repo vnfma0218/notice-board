@@ -1,28 +1,19 @@
-import { useRef } from 'react';
-interface IToastMessage {
-  title: string;
-  message: string;
-  hasConfirm?: boolean;
-  confirmBtnClickCb?: () => void;
-}
-const MessageModal = ({
-  message,
-  title,
-  hasConfirm,
-  confirmBtnClickCb,
-}: IToastMessage) => {
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
+import { useAppSelector } from '@/redux/hooks';
+
+const MessageModal = () => {
+  const modalState = useAppSelector((state) => state.modalReducer);
+
   return (
     <dialog id="message_modal" className="modal">
       <form method="dialog" className="modal-box">
         <div className="text-2xl font-bold">
-          <span>{title}</span>
+          <span>{modalState.title}</span>
         </div>
-        <p className="py-4">{message}</p>
+        <p className="py-4">{modalState.message}</p>
         <div className="modal-action">
           {/* if there is a button in form, it will close the modal */}
-          {hasConfirm ? (
-            <button onClick={confirmBtnClickCb} className="btn">
+          {modalState.hasConfirm ? (
+            <button onClick={modalState.confirmCallback} className="btn">
               확인
             </button>
           ) : null}

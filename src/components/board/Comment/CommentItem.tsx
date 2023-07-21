@@ -6,6 +6,7 @@ import { elapsedTime } from '@/lib/utils/common';
 import { useState } from 'react';
 import TextEditor from '@/components/TextEditor';
 import Image from 'next/image';
+import { useAppSelector } from '@/redux/hooks';
 
 const CommentItem = ({
   comment,
@@ -16,6 +17,8 @@ const CommentItem = ({
   onDeleteComment: (commentId: string) => void;
   onSuccessUpdateComment: () => void;
 }) => {
+  const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
+
   const [updateMode, setUpdateMode] = useState(false);
   const [updateText, setUpdateText] = useState('');
 
@@ -39,13 +42,6 @@ const CommentItem = ({
   return (
     <div>
       <li className="border-b p-3">
-        <Image
-          priority
-          src="/images/update.svg"
-          height={20}
-          width={20}
-          alt="updateBtn"
-        />
         <div className="flex justify-between items-center">
           <span>작성자: {comment.user.nickname}</span>
           <div className="flex items-center">
@@ -53,69 +49,54 @@ const CommentItem = ({
               {elapsedTime(comment.createdAt)}
             </span>
 
-            <div className="dropdown dropdown-bottom dropdown-end">
-              <label tabIndex={0} className="m-1 cursor-pointer">
-                <Image
-                  priority
-                  src="/images/more_btn.svg"
-                  height={20}
-                  width={20}
-                  alt="MoreButton"
-                />
-              </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 text-center rounded-sm"
-              >
-                <li
-                  onClick={onChangeUpdateMode}
-                  className="w-20 mb-3 cursor-pointer"
+            {comment.isMine ? (
+              <div className="dropdown dropdown-bottom dropdown-end">
+                <label tabIndex={0} className="m-1 cursor-pointer">
+                  <Image
+                    priority
+                    src="/images/more_btn.svg"
+                    height={20}
+                    width={20}
+                    alt="MoreButton"
+                  />
+                </label>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content z-[1] menu p-2 shadow bg-base-100 text-center rounded-sm"
                 >
-                  <div className="hover:text-blue-400">
-                    <Image
-                      priority
-                      src="/images/update.svg"
-                      height={13}
-                      width={13}
-                      alt="updateBtn"
-                    />
-                    수정
-                  </div>
-                </li>
-                <li
-                  onClick={showDeletePopup}
-                  className="w-20 cursor-pointer hover:text-blue-400"
-                >
-                  <div className="hover:text-blue-400">
-                    <Image
-                      priority
-                      src="/images/delete.svg"
-                      height={13}
-                      width={13}
-                      alt="updateBtn"
-                    />
-                    삭제
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            {/* {comment.isMine ? (
-              <button
-                onClick={showDeletePopup}
-                className="btn btn-sm btn-warning"
-              >
-                삭제
-              </button>
+                  <li
+                    onClick={onChangeUpdateMode}
+                    className="w-20 mb-3 cursor-pointer"
+                  >
+                    <div className="hover:text-blue-400">
+                      <Image
+                        priority
+                        src="/images/update.svg"
+                        height={13}
+                        width={13}
+                        alt="updateBtn"
+                      />
+                      수정
+                    </div>
+                  </li>
+                  <li
+                    onClick={showDeletePopup}
+                    className="w-20 cursor-pointer hover:text-blue-400"
+                  >
+                    <div className="hover:text-blue-400">
+                      <Image
+                        priority
+                        src="/images/delete.svg"
+                        height={13}
+                        width={13}
+                        alt="updateBtn"
+                      />
+                      삭제
+                    </div>
+                  </li>
+                </ul>
+              </div>
             ) : null}
-            {comment.isMine && !updateMode ? (
-              <button
-                onClick={onChangeUpdateMode}
-                className="btn btn-sm btn-accent"
-              >
-                수정
-              </button>
-            ) : null} */}
           </div>
         </div>
 

@@ -5,8 +5,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { getPostList } from '@/api/post';
 import PostList from '@/components/board/PostList';
 import ReactPaginate from 'react-paginate';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import MessageModal from '@/components/MessageModal';
+import { showModal } from '@/redux/features/modal/modalSlice';
 
 interface IPageInfo {
   page: number;
@@ -14,6 +15,8 @@ interface IPageInfo {
 }
 
 export default function BoardPage() {
+  const dispatch = useAppDispatch();
+
   const isLoggedIn = useAppSelector((state) => state.userReducer.isLoggedIn);
   const router = useRouter();
   const pathname = usePathname();
@@ -62,6 +65,17 @@ export default function BoardPage() {
     if (isLoggedIn) {
       router.push('/board/new');
     } else {
+      dispatch(
+        showModal({
+          message: '로그인이 필요합니다 로그인 하시겠습니까?',
+          title: '안내',
+          hasConfirm: true,
+          confirmCallback: () => {
+            router.push('/signin');
+          },
+        })
+      );
+
       window.message_modal.show();
     }
   };
@@ -100,14 +114,7 @@ export default function BoardPage() {
           activeClassName={'pagination__link--active'}
         />
       ) : null}
-      <MessageModal
-        message="로그인이 필요합니다 로그인 하시겠습니까?"
-        title="안내"
-        hasConfirm={true}
-        confirmBtnClickCb={() => {
-          router.push('/signin');
-        }}
-      />
+      <MessageModal />
     </main>
   );
 }

@@ -18,7 +18,7 @@ const Avatar = () => {
         <div className="bg-neutral-focus text-neutral-content rounded-full w-9">
           <Image
             priority
-            src={data?.avatar ? data?.avatar : '/images/avatar.svg'}
+            src={data?.avatar ? data?.avatar : '/images/profile_default.svg'}
             height={20}
             width={20}
             alt="MoreButton"

@@ -9,6 +9,8 @@ import useSWR from 'swr';
 import CommentList from '@/components/board/Comment/CommentList';
 import MessageModal from '@/components/MessageModal';
 import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { showModal } from '@/redux/features/modal/modalSlice';
 
 interface IPostForm {
   email: string;
@@ -20,7 +22,9 @@ export default function BoardDetailPage({
 }: {
   params: { id: string };
 }) {
+  const dispatch = useAppDispatch();
   const router = useRouter();
+
   const [selectedCommentId, setSelectedCommentId] = useState('');
   const { data, isLoading, mutate } = useSWR(`/post/${params.id}`, () =>
     getPostDetail(params.id)
@@ -29,7 +33,14 @@ export default function BoardDetailPage({
     mutate();
   };
   const onShowDelCommentModal = (commentId: string) => {
-    window.message_modal.show();
+    dispatch(
+      showModal({
+        title: '삭제',
+        message: '정말 삭제하시겠습니까?',
+        hasConfirm: true,
+        confirmCallback: onConfirmDeleteComment,
+      })
+    );
     setSelectedCommentId(commentId);
   };
   const onConfirmDeleteComment = () => {
@@ -85,12 +96,7 @@ export default function BoardDetailPage({
         onSuccessUpdateComment={onSuccessUpdateComment}
         comments={data?.comment ?? []}
       />
-      <MessageModal
-        title="삭제"
-        message="정말 삭제하시겠습니까?"
-        hasConfirm={true}
-        confirmBtnClickCb={onConfirmDeleteComment}
-      />
+      <MessageModal />
     </main>
   );
 }
