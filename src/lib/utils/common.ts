@@ -21,3 +21,8 @@ export function elapsedTime(date: string) {
   }
   return '방금 전';
 }
+
+export function getAvatarUrl(filename: string) {
+  if (!filename) return null;
+  return `http://localhost:8080/uploads/${filename}`;
+}

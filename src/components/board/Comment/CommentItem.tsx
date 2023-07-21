@@ -2,7 +2,7 @@ import ReactQuill from 'react-quill';
 
 import { updateComment } from '@/api/post';
 import { CommentType } from '@/lib/types/post';
-import { elapsedTime } from '@/lib/utils/common';
+import { elapsedTime, getAvatarUrl } from '@/lib/utils/common';
 import { useState } from 'react';
 import TextEditor from '@/components/TextEditor';
 import Image from 'next/image';
@@ -39,11 +39,31 @@ const CommentItem = ({
     });
     console.log('onsubmit');
   };
+  const avatarUrl = getAvatarUrl(comment.user.avatar?.filename ?? '');
   return (
     <div>
       <li className="border-b p-3">
         <div className="flex justify-between items-center">
-          <span>작성자: {comment.user.nickname}</span>
+          <div className="flex items-center">
+            <div>
+              <Image
+                priority
+                src={avatarUrl ? avatarUrl : '/images/profile_default.svg'}
+                height={50}
+                width={50}
+                alt="MoreButton"
+                className="rounded-full mr-3"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold">
+                {comment.user.nickname}
+              </span>
+              <span className="text-xs mr-2">
+                {elapsedTime(comment.createdAt)}
+              </span>
+            </div>
+          </div>
           <div className="flex items-center">
             <span className="text-sm mr-2">
               {elapsedTime(comment.createdAt)}

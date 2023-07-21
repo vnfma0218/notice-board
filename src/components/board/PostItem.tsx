@@ -1,5 +1,6 @@
 import { IPost } from '@/lib/types/post';
 import { elapsedTime } from '@/lib/utils/common';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const PostItem = ({ post }: { post: IPost }) => {
@@ -11,14 +12,28 @@ const PostItem = ({ post }: { post: IPost }) => {
           <p>{post.commentCount}</p>
         </div>
         <div className="flex flex-col justify-between pt-1 mb-2">
-          <div className="flex items-center">
-            <p className="mr-3">{post.user.nickname}</p>
+          <div className="flex items-center mt-2">
+            <div className="mr-2">
+              <Image
+                className="rounded-full"
+                priority
+                src={
+                  post.user?.avatar
+                    ? post.user?.avatar
+                    : '/images/profile_default.svg'
+                }
+                height={25}
+                width={25}
+                alt="MoreButton"
+              />
+            </div>
 
+            <p className="mr-3">{post.user.nickname}</p>
             <p className="text-sm">{elapsedTime(post.createdAt)}</p>
           </div>
 
-          <Link href={`/board/${post.id}`}>
-            <p className="text-xl font-bold cursor-pointer hover:text-blue-400 mb-3">
+          <Link href={`/board/${post._id}`}>
+            <p className="mt-2 text-xl font-bold cursor-pointer hover:text-blue-400 mb-3">
               {post?.title}
             </p>
           </Link>

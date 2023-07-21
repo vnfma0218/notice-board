@@ -6,8 +6,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { getProfile } from '@/api/user';
+import { useAppSelector } from '@/redux/hooks';
 
 const Avatar = () => {
+  const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
   const dispatch = useDispatch();
   const router = useRouter();
   const { data, mutate } = useSWR('/profile', () => getProfile());

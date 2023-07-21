@@ -1,5 +1,5 @@
 export interface IPost {
-  id: string;
+  _id: string;
   title: string;
   content: string;
   commentCount: number;
@@ -8,6 +8,7 @@ export interface IPost {
   createdAt: string;
   user: {
     nickname: string;
+    avatar?: string;
   };
 }
 
@@ -22,4 +23,7 @@ export type CommentType = {
 export type User = {
   email: string;
   nickname: string;
+  avatar?: {
+    filename: string;
+  };
 };

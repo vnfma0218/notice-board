@@ -5,7 +5,7 @@ const BoardList = ({ posts }: { posts: IPost[] }) => {
   return (
     <ul className="min-h-[500px]">
       {posts.map((post) => {
-        return <PostItem post={post} key={post.id} />;
+        return <PostItem post={post} key={post._id} />;
       })}
     </ul>
   );
