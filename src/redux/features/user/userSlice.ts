@@ -12,7 +12,9 @@ export const user = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    setLogout: () => initialState,
+    setLogout: (state) => {
+      state.isLoggedIn = false;
+    },
     setLoggedIn: (state) => {
       state.isLoggedIn = true;
     },

@@ -1,15 +1,13 @@
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
-import { logout } from '@/api/login';
+import { isLoggedIn, logout } from '@/api/login';
 import { setLogout } from '@/redux/features/user/userSlice';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { getProfile } from '@/api/user';
-import { useAppSelector } from '@/redux/hooks';
 
 const Avatar = () => {
-  const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
   const dispatch = useDispatch();
   const router = useRouter();
   const { data, mutate } = useSWR('/profile', () => getProfile());
@@ -40,8 +38,8 @@ const Avatar = () => {
         </li>
         <li
           onClick={() => {
+            dispatch(setLogout());
             logout().then(() => {
-              dispatch(setLogout());
               mutate();
               router.push('/signin');
             });

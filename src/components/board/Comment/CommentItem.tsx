@@ -6,7 +6,6 @@ import { elapsedTime, getAvatarUrl } from '@/lib/utils/common';
 import { useState } from 'react';
 import TextEditor from '@/components/TextEditor';
 import Image from 'next/image';
-import { useAppSelector } from '@/redux/hooks';
 
 const CommentItem = ({
   comment,
@@ -17,8 +16,6 @@ const CommentItem = ({
   onDeleteComment: (commentId: string) => void;
   onSuccessUpdateComment: () => void;
 }) => {
-  const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
-
   const [updateMode, setUpdateMode] = useState(false);
   const [updateText, setUpdateText] = useState('');
 
@@ -65,12 +62,30 @@ const CommentItem = ({
             </div>
           </div>
           <div className="flex items-center">
-            <span className="text-sm mr-2">
-              {elapsedTime(comment.createdAt)}
-            </span>
+            <div className="border rounded-md flex">
+              <button className="border-r px-2 py-1">
+                <Image
+                  priority
+                  src="/images/arrow-down.svg"
+                  height={20}
+                  width={20}
+                  alt="MoreButton"
+                />
+              </button>
+              <button className="py-1 px-4">0</button>
+              <button className="border-l px-2 py-1">
+                <Image
+                  priority
+                  src="/images/arrow-up.svg"
+                  height={20}
+                  width={20}
+                  alt="MoreButton"
+                />
+              </button>
+            </div>
 
             {comment.isMine ? (
-              <div className="dropdown dropdown-bottom dropdown-end">
+              <div className="ml-2 dropdown dropdown-bottom dropdown-end">
                 <label tabIndex={0} className="m-1 cursor-pointer">
                   <Image
                     priority
@@ -124,16 +139,19 @@ const CommentItem = ({
           {updateMode ? (
             <div>
               <TextEditor value={updateText} setContents={setUpdateText} />
-              <div className="flex justify-end">
+              <div className="mt-3 flex justify-end">
                 <button
-                  className="btn mr-2"
+                  className="btn btn-sm mr-2"
                   onClick={() => {
                     setUpdateMode(false);
                   }}
                 >
                   취소
                 </button>
-                <button onClick={onSubmit} className="btn btn-info text-white">
+                <button
+                  onClick={onSubmit}
+                  className="btn btn-sm btn-info text-white"
+                >
                   답변 쓰기
                 </button>
               </div>

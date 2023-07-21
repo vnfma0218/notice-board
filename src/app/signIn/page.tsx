@@ -1,5 +1,7 @@
 'use client';
 import { login } from '@/api/login';
+import { setLoggedIn } from '@/redux/features/user/userSlice';
+import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -10,6 +12,7 @@ interface ILoginForm {
   password: string;
 }
 export default function LoginPage() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const {
     register,
@@ -31,6 +34,7 @@ export default function LoginPage() {
       } else {
         setCustomErrors((prev) => ({ ...prev, hasError: false }));
         mutate();
+        dispatch(setLoggedIn());
         router.push('/');
       }
     });

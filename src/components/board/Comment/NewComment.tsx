@@ -44,10 +44,10 @@ const NewComment = ({ onPostComment }: { onPostComment: () => void }) => {
           !isLogin ? '로그인이 필요합니다' : '좋은 의견을 나눠주세요'
         }
       />
-      <div className="text-right mt-1">
+      <div className="text-right mt-2">
         <button
           onClick={submitComment}
-          className="btn btn-info text-white px-6"
+          className="btn btn-sm btn-info text-white px-6"
         >
           답변 쓰기
         </button>

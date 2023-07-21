@@ -10,8 +10,6 @@ import Avatar from './Avatar';
 import { useEffect } from 'react';
 
 const Header = () => {
-  const authPages = ['/signin', '/signup'];
-  const pathname = usePathname();
   const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -19,16 +17,13 @@ const Header = () => {
     router.push('/signin');
   };
 
-  const { data, isLoading } = useSWR(
-    !authPages.includes(pathname) && !isLogin ? ['/isLoggedIn'] : null,
-    () => isLoggedIn()
-  );
-
   useEffect(() => {
-    if (data?.isLoggedIn) {
-      dispatch(setLoggedIn());
-    }
-  }, [data]);
+    isLoggedIn().then((res) => {
+      if (res.isLoggedIn) {
+        dispatch(setLoggedIn());
+      }
+    });
+  }, []);
 
   return (
     <header className="flex justify-between items-center px-10 py-5 max-w-5xl m-auto">
@@ -42,9 +37,11 @@ const Header = () => {
             <Link href="/board">게시판</Link>
           </li>
 
-          {isLoading ? (
+          {/* isLoading ? (
             <span className="loading loading-spinner loading-sm"></span>
-          ) : isLogin ? (
+          ) : */}
+
+          {isLogin ? (
             <Avatar />
           ) : (
             <button className="btn btn-sm	 btn-outline btn-info" onClick={login}>
