@@ -1,11 +1,8 @@
 'use client';
 import dynamic from 'next/dynamic';
 
-// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
 import { Dispatch, SetStateAction, useMemo, useRef } from 'react';
-const ReactQuill = dynamic(import('react-quill'), { ssr: false });
 
 interface ITextEditor {
   value: string;
@@ -14,6 +11,10 @@ interface ITextEditor {
   height?: string;
 }
 const TextEditor = (props: ITextEditor) => {
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
   const QuillRef = useRef<any>();
 
   // Todo 리액트 퀼 이미지 삽입

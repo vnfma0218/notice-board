@@ -1,11 +1,10 @@
-import ReactQuill from 'react-quill';
-
 import { updateComment } from '@/api/post';
 import { CommentType } from '@/lib/types/post';
 import { elapsedTime, getAvatarUrl } from '@/lib/utils/common';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import TextEditor from '@/components/TextEditor';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 const CommentItem = ({
   comment,
@@ -16,6 +15,10 @@ const CommentItem = ({
   onDeleteComment: (commentId: string) => void;
   onSuccessUpdateComment: () => void;
 }) => {
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
   const [updateMode, setUpdateMode] = useState(false);
   const [updateText, setUpdateText] = useState('');
 

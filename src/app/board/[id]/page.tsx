@@ -1,5 +1,5 @@
 'use client';
-import ReactQuill from 'react-quill';
+import dynamic from 'next/dynamic';
 
 import Image from 'next/image';
 import { deleteComment, getPostDetail } from '@/api/post';
@@ -8,7 +8,7 @@ import NewComment from '@/components/board/Comment/NewComment';
 import useSWR from 'swr';
 import CommentList from '@/components/board/Comment/CommentList';
 import MessageModal from '@/components/MessageModal';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { showModal } from '@/redux/features/modal/modalSlice';
 
@@ -17,6 +17,10 @@ export default function BoardDetailPage({
 }: {
   params: { id: string };
 }) {
+  const ReactQuill = useMemo(
+    () => dynamic(() => import('react-quill'), { ssr: false }),
+    []
+  );
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -40,6 +44,8 @@ export default function BoardDetailPage({
     );
   };
   const onConfirmDeleteComment = () => {
+    console.log('selectedCommentId', selectedCommentId);
+    if (!selectedCommentId) return;
     deleteComment(selectedCommentId, params.id).then((res) => {
       console.log(res);
       if (res.resultCode === 2000) {
