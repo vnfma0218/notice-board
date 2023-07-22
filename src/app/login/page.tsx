@@ -110,14 +110,16 @@ export default function LoginPage() {
         <div className="text-center mt-10">
           <p>소셜로그인</p>
           <button
-            // onClick={() => {
-            //   window.location.href =
-            //     'https://kauth.kakao.com/oauth/authorize?client_id=' +
-            //     process.env.NEXT_PUBLIC_KAKAO_REST_KEY +
-            //     '&redirect_uri=' +
-            //     encodeURIComponent(`http://localhost:8080/user/auth/kakao`) +
-            //     '&response_type=code';
-            // }}
+            onClick={() => {
+              window.location.href =
+                'https://kauth.kakao.com/oauth/authorize?client_id=' +
+                process.env.NEXT_PUBLIC_KAKAO_REST_KEY +
+                '&redirect_uri=' +
+                encodeURIComponent(
+                  `${process.env.NEXT_PUBLIC_API}/user/auth/kakao`
+                ) +
+                '&response_type=code';
+            }}
             className="btn w-full bg-yellow-300"
           >
             kakao

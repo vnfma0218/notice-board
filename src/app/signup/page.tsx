@@ -35,7 +35,7 @@ export default function SignupPage() {
   });
 
   const onSuccessSignup = () => {
-    router.push('/signin');
+    router.push('/login');
   };
 
   const submitForm: SubmitHandler<ILoginForm> = (data: ILoginForm) => {
