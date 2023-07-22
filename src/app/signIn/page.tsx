@@ -1,11 +1,11 @@
 'use client';
+import useSWR from 'swr';
 import { login } from '@/api/login';
 import { setLoggedIn } from '@/redux/features/user/userSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import useSWR from 'swr';
 
 interface ILoginForm {
   email: string;
@@ -110,14 +110,14 @@ export default function LoginPage() {
         <div className="text-center mt-10">
           <p>소셜로그인</p>
           <button
-            onClick={() => {
-              window.location.href =
-                'https://kauth.kakao.com/oauth/authorize?client_id=' +
-                process.env.NEXT_PUBLIC_KAKAO_REST_KEY +
-                '&redirect_uri=' +
-                encodeURIComponent(`http://localhost:8080/user/auth/kakao`) +
-                '&response_type=code';
-            }}
+            // onClick={() => {
+            //   window.location.href =
+            //     'https://kauth.kakao.com/oauth/authorize?client_id=' +
+            //     process.env.NEXT_PUBLIC_KAKAO_REST_KEY +
+            //     '&redirect_uri=' +
+            //     encodeURIComponent(`http://localhost:8080/user/auth/kakao`) +
+            //     '&response_type=code';
+            // }}
             className="btn w-full bg-yellow-300"
           >
             kakao
