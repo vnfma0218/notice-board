@@ -41,7 +41,7 @@ const Avatar = () => {
             dispatch(setLogout());
             logout().then(() => {
               mutate();
-              router.push('/signin');
+              router.push('/login');
             });
           }}
         >

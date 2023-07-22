@@ -14,7 +14,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const login = () => {
-    router.push('/signin');
+    router.push('/login');
   };
 
   useEffect(() => {
