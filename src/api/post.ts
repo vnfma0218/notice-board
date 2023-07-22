@@ -6,7 +6,7 @@ interface PostResponse {
   id: string;
   message: string;
 }
-// 게시글 등록하기
+// 게시글 등록
 export const savePost = async (data: {
   title: string;
   content: string;
@@ -15,6 +15,24 @@ export const savePost = async (data: {
     const res = await axiosInstance<PostResponse>({
       url: '/post/new',
       method: 'post',
+      data,
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};
+// 게시글 수정
+export const updatePost = async (data: {
+  title: string;
+  content: string;
+  id: string;
+}) => {
+  try {
+    const res = await axiosInstance({
+      url: '/post',
+      method: 'put',
       data,
       withCredentials: true,
     });

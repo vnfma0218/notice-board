@@ -17,6 +17,7 @@
 }
 
 .pagination {
+  min-height: 70px;
   display: flex;
   justify-content: center;
   list-style: none;
@@ -24,10 +25,11 @@
 
 .pagination a {
   cursor: pointer;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #3abef7;
+  padding: 12px;
+  border-radius: 50%;
+  border: 1px solid #02a4ea;
   color: #3abef7;
+  margin-right: 10px;
 }
 
 .pagination__link {

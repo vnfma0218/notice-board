@@ -6,11 +6,7 @@ import Link from 'next/link';
 const PostItem = ({ post }: { post: IPost }) => {
   return (
     <>
-      <li className="flex border-gray-950 p-2">
-        <div className="border border-black py-3 px-5 mr-5 text-center rounded-md">
-          <p>답변</p>
-          <p>{post.commentCount}</p>
-        </div>
+      <li className="flex justify-between items-center border-gray-950 p-2">
         <div className="flex flex-col justify-between pt-1 mb-2">
           <div className="flex items-center mt-2">
             <div className="mr-2">
@@ -37,6 +33,10 @@ const PostItem = ({ post }: { post: IPost }) => {
               {post?.title}
             </p>
           </Link>
+        </div>
+        <div className="border border-black py-3 px-5 mr-5 text-center rounded-md h-10 flex justify-center items-center">
+          <p>답변</p>
+          <p>{post.commentCount}</p>
         </div>
       </li>
       <div className="divider m-0"></div>

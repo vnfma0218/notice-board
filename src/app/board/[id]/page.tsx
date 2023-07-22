@@ -12,11 +12,6 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { showModal } from '@/redux/features/modal/modalSlice';
 
-interface IPostForm {
-  email: string;
-  password: string;
-}
-
 export default function BoardDetailPage({
   params,
 }: {
@@ -33,6 +28,8 @@ export default function BoardDetailPage({
     mutate();
   };
   const onShowDelCommentModal = (commentId: string) => {
+    setSelectedCommentId(commentId);
+
     dispatch(
       showModal({
         title: '삭제',
@@ -41,10 +38,8 @@ export default function BoardDetailPage({
         confirmCallback: onConfirmDeleteComment,
       })
     );
-    setSelectedCommentId(commentId);
   };
   const onConfirmDeleteComment = () => {
-    console.log('commentId', selectedCommentId);
     deleteComment(selectedCommentId, params.id).then((res) => {
       console.log(res);
       if (res.resultCode === 2000) {
@@ -54,6 +49,9 @@ export default function BoardDetailPage({
   };
   const onSuccessUpdateComment = () => {
     mutate();
+  };
+  const onEditPost = () => {
+    router.push(`/board/edit/${params.id}`);
   };
   if (isLoading) {
     return (
@@ -86,7 +84,12 @@ export default function BoardDetailPage({
             목록
           </button>
           {data?.isMine ? (
-            <button className="btn btn-outline px-7 btn-sm">수정</button>
+            <button
+              onClick={onEditPost}
+              className="btn btn-outline px-7 btn-sm"
+            >
+              수정
+            </button>
           ) : null}
         </div>
       </div>

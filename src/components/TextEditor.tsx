@@ -1,15 +1,20 @@
-import ReactQuill from 'react-quill';
+'use client';
+import dynamic from 'next/dynamic';
+
+// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { Dispatch, SetStateAction, useMemo, useRef } from 'react';
+const ReactQuill = dynamic(import('react-quill'), { ssr: false });
 
 interface ITextEditor {
   value: string;
   placeholder?: string;
   setContents: Dispatch<SetStateAction<string>>;
+  height?: string;
 }
 const TextEditor = (props: ITextEditor) => {
-  const QuillRef = useRef<ReactQuill>();
+  const QuillRef = useRef<any>();
 
   // Todo 리액트 퀼 이미지 삽입
   const imageHandler = () => {
@@ -87,16 +92,16 @@ const TextEditor = (props: ITextEditor) => {
   );
   return (
     <ReactQuill
-      ref={(element) => {
-        if (element !== null) {
-          QuillRef.current = element;
-        }
-      }}
+      // ref={(element) => {
+      //   if (element !== null) {
+      //     QuillRef.current = element;
+      //   }
+      // }}
       className="my-editor"
       value={props.value}
       modules={modules}
       theme="snow"
-      style={{ height: '90%' }}
+      style={{ height: props.height ? props.height : '90%' }}
       placeholder={props.placeholder ? props.placeholder : ''}
       onChange={props.setContents}
     />
