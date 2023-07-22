@@ -21,7 +21,7 @@ const NewComment = ({ onPostComment }: { onPostComment: () => void }) => {
           message: '로그인이 필요합니다. 로그인하시겠습니까?',
           hasConfirm: true,
           confirmCallback: () => {
-            router.push('/signin');
+            router.push('/login');
           },
         })
       );

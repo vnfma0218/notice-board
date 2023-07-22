@@ -44,7 +44,6 @@ export default function BoardDetailPage({
     );
   };
   const onConfirmDeleteComment = () => {
-    console.log('selectedCommentId', selectedCommentId);
     if (!selectedCommentId) return;
     deleteComment(selectedCommentId, params.id).then((res) => {
       console.log(res);

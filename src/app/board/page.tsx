@@ -71,7 +71,7 @@ export default function BoardPage() {
           title: '안내',
           hasConfirm: true,
           confirmCallback: () => {
-            router.push('/signin');
+            router.push('/login');
           },
         })
       );
