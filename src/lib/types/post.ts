@@ -23,6 +23,7 @@ export type CommentType = {
 export type User = {
   email: string;
   nickname: string;
+  defaultAvatar: string;
   avatar?: {
     filename: string;
   };

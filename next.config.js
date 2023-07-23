@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'prblog.fly.dev', '*'],
+    domains: ['localhost', 'source.boringavatars.com', 'prblog.fly.dev', '*'],
   },
 };
 

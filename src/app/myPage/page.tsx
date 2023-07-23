@@ -6,7 +6,6 @@ import { getProfile, updateProfile } from '@/api/user';
 import { useAppDispatch } from '@/redux/hooks';
 import { showModal } from '@/redux/features/modal/modalSlice';
 import MessageModal from '@/components/MessageModal';
-import RandomAvatar from 'boring-avatars';
 
 export default function MyPage() {
   const dispatch = useAppDispatch();
@@ -16,7 +15,6 @@ export default function MyPage() {
   const [nickname, setNickname] = useState<string>('');
 
   const { data } = useSWR('/profile', () => getProfile());
-  const env = process.env.NODE_ENV;
 
   useEffect(() => {
     if (data?.nickname) {
@@ -141,9 +139,14 @@ export default function MyPage() {
           </div>
           {/* image */}
           <div className="mt-10 basis-1/2 flex justify-end">
-            <div className="text-neutral-content">
-              {env === 'development' ? (
-                <Image
+            <div className="text-neutral-content w-52 h-52">
+              <img
+                className="cursor-pointer w-full h-full rounded-full"
+                onClick={onClickAvatar}
+                src={previewImage ? previewImage : data?.avatar}
+                alt={data?.nickname}
+              />
+              {/* <Image
                   className="cursor-pointer rounded-full"
                   priority
                   src={
@@ -157,21 +160,7 @@ export default function MyPage() {
                   width={170}
                   alt="MoreButton"
                   onClick={onClickAvatar}
-                />
-              ) : (
-                <RandomAvatar
-                  size={40}
-                  name="Mahalia Jackson"
-                  variant="marble"
-                  colors={[
-                    '#92A1C6',
-                    '#146A7C',
-                    '#F0AB3D',
-                    '#C271B4',
-                    '#C20D90',
-                  ]}
-                />
-              )}
+                /> */}
             </div>
             <input
               name="img"

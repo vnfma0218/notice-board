@@ -1,39 +1,39 @@
-import useSWR from 'swr';
-import RandomAvatar from 'boring-avatars';
-
 import { logout } from '@/api/login';
 import { setLogout } from '@/redux/features/user/userSlice';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { getProfile } from '@/api/user';
-
+import { useEffect, useState } from 'react';
+interface IUserProfile {
+  avatar: string;
+  email: string;
+  nickname: string;
+}
 const Avatar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data, mutate } = useSWR('/profile', () => getProfile());
-  const env = process.env.NODE_ENV;
+  const [profile, setProfile] = useState<IUserProfile>();
+  // const { data, mutate } = useSWR('/profile', () => getProfile());
+
+  useEffect(() => {
+    getProfile().then((res) => {
+      setProfile(res);
+    });
+  }, []);
 
   return (
     <div className="dropdown dropdown-end cursor-pointer">
       <div tabIndex={0} className="avatar placeholder">
         <div className="bg-neutral-focus text-neutral-content rounded-full w-9">
-          {env === 'development' ? (
-            <Image
-              priority
-              src={data?.avatar ? data?.avatar : '/images/profile_default.svg'}
-              height={20}
-              width={20}
-              alt="MoreButton"
-            />
-          ) : (
-            <RandomAvatar
-              size={40}
-              name="Mahalia Jackson"
-              variant="marble"
-              colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-            />
-          )}
+          <img src={profile?.avatar} alt={profile?.nickname} />
+          {/* <Image
+            priority
+            src={'https://source.boringavatars.com/'}
+            height={20}
+            width={20}
+            alt="MoreButton"
+          /> */}
         </div>
       </div>
       <ul
@@ -51,7 +51,7 @@ const Avatar = () => {
           onClick={() => {
             dispatch(setLogout());
             logout().then(() => {
-              mutate();
+              // mutate();
               router.push('/login');
             });
           }}
