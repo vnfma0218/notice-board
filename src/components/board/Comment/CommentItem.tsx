@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import TextEditor from '@/components/TextEditor';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import RandomAvatar from 'boring-avatars';
 
 const CommentItem = ({
   comment,
@@ -40,20 +41,38 @@ const CommentItem = ({
     console.log('onsubmit');
   };
   const avatarUrl = getAvatarUrl(comment.user.avatar?.filename ?? '');
+
+  const env = process.env.NODE_ENV;
+
   return (
     <div>
       <li className="border-b p-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <div>
-              <Image
-                priority
-                src={avatarUrl ? avatarUrl : '/images/profile_default.svg'}
-                height={50}
-                width={50}
-                alt="MoreButton"
-                className="rounded-full mr-3"
-              />
+              {env === 'development' ? (
+                <Image
+                  priority
+                  src={avatarUrl ? avatarUrl : '/images/profile_default.svg'}
+                  height={50}
+                  width={50}
+                  alt="MoreButton"
+                  className="rounded-full mr-3"
+                />
+              ) : (
+                <RandomAvatar
+                  size={40}
+                  name="Mahalia Jackson"
+                  variant="marble"
+                  colors={[
+                    '#92A1C6',
+                    '#146A7C',
+                    '#F0AB3D',
+                    '#C271B4',
+                    '#C20D90',
+                  ]}
+                />
+              )}
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold">

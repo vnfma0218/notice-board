@@ -6,6 +6,7 @@ import { getProfile, updateProfile } from '@/api/user';
 import { useAppDispatch } from '@/redux/hooks';
 import { showModal } from '@/redux/features/modal/modalSlice';
 import MessageModal from '@/components/MessageModal';
+import RandomAvatar from 'boring-avatars';
 
 export default function MyPage() {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ export default function MyPage() {
   const [nickname, setNickname] = useState<string>('');
 
   const { data } = useSWR('/profile', () => getProfile());
+  const env = process.env.NODE_ENV;
 
   useEffect(() => {
     if (data?.nickname) {
@@ -140,21 +142,36 @@ export default function MyPage() {
           {/* image */}
           <div className="mt-10 basis-1/2 flex justify-end">
             <div className="text-neutral-content">
-              <Image
-                className="cursor-pointer rounded-full"
-                priority
-                src={
-                  previewImage
-                    ? previewImage
-                    : data?.avatar
-                    ? data?.avatar
-                    : '/images/profile_default.svg'
-                }
-                height={170}
-                width={170}
-                alt="MoreButton"
-                onClick={onClickAvatar}
-              />
+              {env === 'development' ? (
+                <Image
+                  className="cursor-pointer rounded-full"
+                  priority
+                  src={
+                    previewImage
+                      ? previewImage
+                      : data?.avatar
+                      ? data?.avatar
+                      : '/images/profile_default.svg'
+                  }
+                  height={170}
+                  width={170}
+                  alt="MoreButton"
+                  onClick={onClickAvatar}
+                />
+              ) : (
+                <RandomAvatar
+                  size={40}
+                  name="Mahalia Jackson"
+                  variant="marble"
+                  colors={[
+                    '#92A1C6',
+                    '#146A7C',
+                    '#F0AB3D',
+                    '#C271B4',
+                    '#C20D90',
+                  ]}
+                />
+              )}
             </div>
             <input
               name="img"

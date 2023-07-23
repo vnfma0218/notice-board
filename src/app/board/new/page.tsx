@@ -36,7 +36,10 @@ export default function NewBoard() {
   };
   return (
     <main className="max-w-3xl m-auto px-10">
-      <form onSubmit={handleSubmit(submitForm)} className="mt-20 mb-10">
+      <form
+        onSubmit={handleSubmit(submitForm)}
+        className="mt-20 mb-10 relative"
+      >
         <div>
           <label htmlFor="title">제목</label>
           <input
@@ -71,25 +74,27 @@ export default function NewBoard() {
             placeholder={'내용을 입력해주세요'}
           />
         </div>
-      </form>
-      <div className="flex justify-end pt-10">
-        <button
-          onClick={() => {
-            router.back();
-          }}
-          className="btn btn-outline border-gray-300 px-7 btn-sm mr-3"
-        >
-          취소
-        </button>
+        <div className="flex justify-end mt-14 ">
+          <button className="btn btn-outline border-gray-300 px-7 btn-sm mr-3">
+            취소
+          </button>
 
-        <button type="submit" className="btn btn-info px-7 btn-sm text-white">
-          {loading ? (
-            <span className="loading loading-spinner loading-md"></span>
-          ) : (
-            '등록'
-          )}
-        </button>
-      </div>
+          <button
+            onClick={() => {
+              console.log('test');
+              handleSubmit(submitForm);
+            }}
+            type="submit"
+            className="btn btn-info px-7 btn-sm text-white"
+          >
+            {loading ? (
+              <span className="loading loading-spinner loading-md"></span>
+            ) : (
+              '등록'
+            )}
+          </button>
+        </div>
+      </form>
     </main>
   );
 }
