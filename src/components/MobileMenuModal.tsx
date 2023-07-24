@@ -2,14 +2,30 @@
 import useSWR from 'swr';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import Avatar from './Avatar';
 import { getProfile } from '@/api/user';
+import { useDispatch } from 'react-redux';
+import { setLogout } from '@/redux/features/user/userSlice';
+import { logout } from '@/api/login';
+import { usePathname, useRouter } from 'next/navigation';
+import { useRef } from 'react';
+import { useAppSelector } from '@/redux/hooks';
 
+const authRoutes = ['/login', '/signup'];
 const MobileMenuModal = () => {
-  const { data, error } = useSWR('/profile', () => getProfile());
-  console.log('data', data);
+  const pathName = usePathname();
+  const { data, error, mutate } = useSWR(
+    authRoutes.findIndex((el) => el === pathName) === -1 ? '/profile' : null,
+    () => getProfile()
+  );
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
+  const navigatePage = (url: string) => {
+    closeBtnRef.current?.click();
+    router.push(url);
+  };
   return (
     <dialog id="mobile_modal" className="modal">
       <form
@@ -20,7 +36,7 @@ const MobileMenuModal = () => {
           <p className="text-xl">Welcome!</p>
           <div className="modal-action mt-0">
             {/* if there is a button, it will close the modal */}
-            <button className="btn cursor-pointer">
+            <button ref={closeBtnRef} className="btn cursor-pointer">
               <Image
                 src="./images/close.svg"
                 height={20}
@@ -32,28 +48,63 @@ const MobileMenuModal = () => {
         </div>
 
         <nav className="mt-10">
-          <ul className="text-center ">
-            <li className="cursor-pointer p-5 hover:text-blue-400 mb-10 hover:bg-slate-300 rounded-md">
-              <Link href="/test">테스트페이지</Link>
+          <ul className="">
+            <li
+              onClick={() => navigatePage('/test')}
+              className="cursor-pointer p-3 hover:text-blue-400  hover:bg-slate-300 rounded-md"
+            >
+              테스트 페이지
             </li>
-            <li className="cursor-pointer p-5 hover:text-blue-400 mb-10 hover:bg-slate-300 rounded-md">
-              <Link href="/board">게시판</Link>
+            <li
+              onClick={() => navigatePage('/board')}
+              className="cursor-pointer p-3 hover:text-blue-400  hover:bg-slate-300 rounded-md"
+            >
+              게시판
             </li>
           </ul>
         </nav>
         <div className="divider"></div>
-
-        <div className="flex items-center">
-          <Avatar pageInfo="modal" />
-          <div className="ml-3">
-            <p>{data?.nickname}</p>
-            <p className="text-gray-500">{data?.email}</p>
+        {data?.nickname ? (
+          <div className="flex items-center">
+            <Avatar pageInfo="modal" />
+            <div className="ml-3">
+              <p>{data?.nickname}</p>
+              <p className="text-gray-500">{data?.email}</p>
+            </div>
           </div>
-        </div>
+        ) : null}
+
         <div>
-          <li className="mt-5 list-none cursor-pointer p-5 hover:text-blue-400 mb-10 hover:bg-slate-300 rounded-md">
-            <Link href="/myPage">마이페이지</Link>
-          </li>
+          {!data?.nickname ? (
+            <li
+              onClick={() => navigatePage('/login')}
+              className="mt-5 list-none cursor-pointer p-3 hover:text-blue-400 mb-10 hover:bg-slate-300 rounded-md"
+            >
+              로그인
+            </li>
+          ) : (
+            <>
+              <li
+                onClick={() => navigatePage('/myPage')}
+                className="mt-5 list-none cursor-pointer p-3 hover:text-blue-400  hover:bg-slate-300 rounded-md"
+              >
+                마이페이지
+              </li>
+              <li
+                onClick={() => {
+                  dispatch(setLogout());
+                  closeBtnRef.current?.click();
+                  logout().then(() => {
+                    mutate();
+                    router.push('/login');
+                  });
+                }}
+                className="list-none p-3 cursor-pointer hover:text-blue-400 mb-10 hover:bg-slate-300 rounded-md"
+              >
+                로그아웃
+              </li>
+            </>
+          )}
         </div>
       </form>
     </dialog>

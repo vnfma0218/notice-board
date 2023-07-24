@@ -67,7 +67,7 @@ export default function MyPage() {
   };
 
   return (
-    <main className="flex m-auto px-20 mt-10">
+    <main className="flex flex-col md:flex md:flex-row m-auto px-4 md:px-20 mt-10">
       <section className="side-menu basis-1/3 h-screen min-w-[250px] pr-10">
         <div>
           <p className="text-2xl font-semibold">내 계정</p>
@@ -99,14 +99,14 @@ export default function MyPage() {
           </li>
         </ul>
       </section>
-      <div className="border"></div>
+      <div className="border vertical md:block"></div>
 
-      <section className="pl-20 basis-2/3">
+      <section className="md:pl-20 basis-2/3">
         <div>
-          <p className="text-2xl font-semibold">회원정보</p>
+          <p className="mt-10 text-2xl font-semibold">회원정보</p>
         </div>
 
-        <div className="flex">
+        <div className="md:flex">
           {/* detail info */}
           <div className="mt-10 basis-1/2">
             <div>
@@ -134,18 +134,10 @@ export default function MyPage() {
                 className="input input-bordered w-full max-w-sm"
               />
             </div>
-            <div className="text-right mt-10">
-              <button
-                onClick={onSubmit}
-                className="mt-4 btn btn-info btn-sm text-white px-10"
-              >
-                저장
-              </button>
-            </div>
           </div>
           {/* image */}
-          <div className="mt-10 basis-1/2 flex justify-end">
-            <div className="text-neutral-content w-52 h-52">
+          <div className="mt-10 basis-1/2 flex md:justify-end">
+            <div className="text-neutral-content w-32 h-32 lg:w-52 lg:h-52">
               <img
                 className="cursor-pointer w-full h-full rounded-full"
                 onClick={onClickAvatar}
@@ -177,6 +169,14 @@ export default function MyPage() {
               onChange={fileChange}
             />
           </div>
+        </div>
+        <div className="md:text-right mt-10">
+          <button
+            onClick={onSubmit}
+            className="mt-4 btn btn-info btn-sm text-white px-10"
+          >
+            저장
+          </button>
         </div>
       </section>
       <MessageModal />

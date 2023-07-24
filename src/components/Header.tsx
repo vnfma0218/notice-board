@@ -13,9 +13,7 @@ const Header = () => {
     router.push('/login');
   };
   const showFullModal = () => {
-    console.log('test');
     window.mobile_modal.showModal();
-    // mobile_modal
   };
   return (
     <header className="flex justify-between items-center px-10 py-5 max-w-5xl m-auto">

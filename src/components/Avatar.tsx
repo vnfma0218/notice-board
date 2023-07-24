@@ -14,12 +14,13 @@ const Avatar = ({ pageInfo }: { pageInfo?: 'modal' }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [profile, setProfile] = useState<IUserProfile>();
-  // const { data, mutate } = useSWR('/profile', () => getProfile());
 
   useEffect(() => {
     getProfile().then((res) => {
-      setProfile(res);
-      dispatch(setLoggedIn());
+      if (res.nickname) {
+        setProfile(res);
+        dispatch(setLoggedIn());
+      }
     });
   }, []);
 
