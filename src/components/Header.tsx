@@ -1,13 +1,9 @@
 'use client';
-import useSWR from 'swr';
-import LoginPopup from './LoginPopup';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { isLoggedIn } from '@/api/login';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setLoggedIn } from '@/redux/features/user/userSlice';
 import Avatar from './Avatar';
-import { useEffect } from 'react';
+import MobileMenuModal from './MobileMenuModal';
 
 const Header = () => {
   const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
@@ -18,6 +14,8 @@ const Header = () => {
   };
   const showFullModal = () => {
     console.log('test');
+    window.mobile_modal.showModal();
+    // mobile_modal
   };
   return (
     <header className="flex justify-between items-center px-10 py-5 max-w-5xl m-auto">
@@ -62,8 +60,7 @@ const Header = () => {
           )}
         </ul>
       </nav>
-
-      <LoginPopup />
+      <MobileMenuModal />
     </header>
   );
 };

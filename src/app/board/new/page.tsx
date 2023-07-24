@@ -27,6 +27,7 @@ export default function NewBoard() {
       console.log('res', res);
     });
   }, []);
+
   const submitForm = async (data: IPostForm) => {
     if (loading) return;
     setLoading(true);

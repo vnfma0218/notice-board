@@ -1,5 +1,5 @@
 import { logout } from '@/api/login';
-import { setLogout } from '@/redux/features/user/userSlice';
+import { setLoggedIn, setLogout } from '@/redux/features/user/userSlice';
 // import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -10,7 +10,7 @@ interface IUserProfile {
   email: string;
   nickname: string;
 }
-const Avatar = () => {
+const Avatar = ({ pageInfo }: { pageInfo?: 'modal' }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [profile, setProfile] = useState<IUserProfile>();
@@ -19,6 +19,7 @@ const Avatar = () => {
   useEffect(() => {
     getProfile().then((res) => {
       setProfile(res);
+      dispatch(setLoggedIn());
     });
   }, []);
 
@@ -36,29 +37,31 @@ const Avatar = () => {
           /> */}
         </div>
       </div>
-      <ul
-        tabIndex={0}
-        className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
-      >
-        <li
-          onClick={() => {
-            router.push('/myPage');
-          }}
+      {pageInfo !== 'modal' ? (
+        <ul
+          tabIndex={0}
+          className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4"
         >
-          <a>마이페이지</a>
-        </li>
-        <li
-          onClick={() => {
-            dispatch(setLogout());
-            logout().then(() => {
-              // mutate();
-              router.push('/login');
-            });
-          }}
-        >
-          <a>로그아웃</a>
-        </li>
-      </ul>
+          <li
+            onClick={() => {
+              router.push('/myPage');
+            }}
+          >
+            <a>마이페이지</a>
+          </li>
+          <li
+            onClick={() => {
+              dispatch(setLogout());
+              logout().then(() => {
+                // mutate();
+                router.push('/login');
+              });
+            }}
+          >
+            <a>로그아웃</a>
+          </li>
+        </ul>
+      ) : null}
     </div>
     // <div className="avatar placeholder">
     //   <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
