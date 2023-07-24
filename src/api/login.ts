@@ -1,11 +1,5 @@
-import { PagingParamsType, PagingResponseType } from '@/lib/types';
-import { IPost } from '@/lib/types/post';
 import axiosInstance from './index';
 
-interface UserResponse {
-  email: string;
-  password: string;
-}
 // 로그인
 export const login = async ({
   email,
@@ -26,7 +20,7 @@ export const login = async ({
     });
     return res.data;
   } catch (error: any) {
-    return error.response.data;
+    return error.response;
   }
 };
 // 회원가입
@@ -51,7 +45,7 @@ export const signup = async ({
     });
     return res.data;
   } catch (error: any) {
-    return error.response.data;
+    return error.response;
   }
 };
 // 로그아웃
@@ -64,7 +58,7 @@ export const logout = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error.response.data;
+    return error.response;
   }
 };
 export const isLoggedIn = async () => {
@@ -76,6 +70,6 @@ export const isLoggedIn = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error.response.data;
+    return error;
   }
 };

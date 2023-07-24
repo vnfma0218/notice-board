@@ -1,7 +1,9 @@
 'use client';
 import dynamic from 'next/dynamic';
-
+import hljs from 'highlight.js';
 import 'react-quill/dist/quill.snow.css';
+import 'highlight.js/styles/tomorrow-night-blue.css';
+
 import { Dispatch, SetStateAction, useMemo, useRef } from 'react';
 
 interface ITextEditor {
@@ -10,9 +12,30 @@ interface ITextEditor {
   setContents: Dispatch<SetStateAction<string>>;
   height?: string;
 }
+
 const TextEditor = (props: ITextEditor) => {
+  // const ReactQuill = useMemo(
+  //   () => dynamic(() => import('react-quill'), { ssr: false }),
+  //   []
+  // );
+
   const ReactQuill = useMemo(
-    () => dynamic(() => import('react-quill'), { ssr: false }),
+    () =>
+      dynamic(
+        () => {
+          hljs.configure({
+            // optionally configure hljs
+            languages: ['javascript', 'php', 'go'],
+          });
+          // @ts-ignore
+          window.hljs = hljs;
+          return import('react-quill');
+        },
+        {
+          ssr: false,
+          loading: () => <p>Loading</p>,
+        }
+      ),
     []
   );
   const QuillRef = useRef<any>();
@@ -70,6 +93,10 @@ const TextEditor = (props: ITextEditor) => {
   // useMemo를 사용하지 않으면, 키를 입력할 때마다, imageHandler 때문에 focus가 계속 풀리게 됩니다.
   const modules = useMemo(
     () => ({
+      syntax: true,
+      // syntax: {
+      //   highlight: (text: any) => hljs.highlightAuto(text).value,
+      // },
       toolbar: {
         container: [
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -81,7 +108,7 @@ const TextEditor = (props: ITextEditor) => {
             { indent: '+1' },
             { align: [] },
           ],
-          ['code-block'],
+          [{ 'code-block': 'code-block' }],
           // ['image', 'video'],
         ],
         handlers: {

@@ -6,15 +6,21 @@ import { getProfile, updateProfile } from '@/api/user';
 import { useAppDispatch } from '@/redux/hooks';
 import { showModal } from '@/redux/features/modal/modalSlice';
 import MessageModal from '@/components/MessageModal';
+import { useRouter } from 'next/navigation';
 
 export default function MyPage() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [imgFile, setImgFile] = useState<File | null>();
   const fileInput = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>('');
   const [nickname, setNickname] = useState<string>('');
 
-  const { data } = useSWR('/profile', () => getProfile());
+  const { data, error } = useSWR('/profile', () => getProfile());
+
+  if (data === 'Forbidden') {
+    router.replace('/login');
+  }
 
   useEffect(() => {
     if (data?.nickname) {

@@ -21,7 +21,7 @@ const PostItem = ({ post }: { post: IPost }) => {
             <p className="text-sm">{elapsedTime(post.createdAt)}</p>
           </div>
 
-          <Link href={`/board/${post._id}`}>
+          <Link href={`/board/${post._id}`} prefetch={false}>
             <p className="mt-2 text-xl font-bold cursor-pointer hover:text-blue-400 mb-3">
               {post?.title}
             </p>

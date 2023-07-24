@@ -1,9 +1,10 @@
 'use client';
 import { savePost } from '@/api/post';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import TextEditor from '@/components/TextEditor';
+import { isLoggedIn } from '@/api/login';
 
 interface IPostForm {
   title: string;
@@ -20,6 +21,12 @@ export default function NewBoard() {
   } = useForm<IPostForm>();
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    isLoggedIn().then((res) => {
+      console.log('res', res);
+    });
+  }, []);
   const submitForm = async (data: IPostForm) => {
     if (loading) return;
     setLoading(true);
@@ -54,7 +61,7 @@ export default function NewBoard() {
                 message: '제목은 5~20자까지 입력해주세요',
               },
               maxLength: {
-                value: 20,
+                value: 40,
                 message: '제목은 5~20자까지 입력해주세요',
               },
             })}
