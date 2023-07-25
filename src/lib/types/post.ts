@@ -10,6 +10,7 @@ export interface IPost {
     nickname: string;
     avatar?: string;
   };
+  isLiked: boolean;
 }
 
 export type CommentType = {

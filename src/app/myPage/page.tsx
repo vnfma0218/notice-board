@@ -1,69 +1,22 @@
 'use client';
-import useSWR from 'swr';
 import Image from 'next/image';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { getProfile, updateProfile } from '@/api/user';
-import { useAppDispatch } from '@/redux/hooks';
-import { showModal } from '@/redux/features/modal/modalSlice';
+
 import MessageModal from '@/components/MessageModal';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import UserInfo from '@/components/myPage/UserInfo';
+import { useState } from 'react';
+import Activities from '@/components/myPage/Activities';
 
 export default function MyPage() {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const [imgFile, setImgFile] = useState<File | null>();
-  const fileInput = useRef<HTMLInputElement>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>('');
-  const [nickname, setNickname] = useState<string>('');
+  const [tab, setTab] = useState<'1' | '2'>('1');
+  const pathname = usePathname();
 
-  const { data, error } = useSWR('/profile', () => getProfile());
+  // if (data === 'Forbidden') {
+  //   router.replace('/login');
+  // }
 
-  if (data === 'Forbidden') {
-    router.replace('/login');
-  }
-
-  useEffect(() => {
-    if (data?.nickname) {
-      setNickname(data.nickname);
-    }
-
-    if (imgFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(imgFile);
-    } else {
-      setPreviewImage(null);
-    }
-  }, [imgFile, data]);
-
-  const onClickAvatar = () => {
-    fileInput.current?.click();
-  };
-  const fileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files !== null) {
-      const file = e.target.files[0];
-      if (file && file.type.substring(0, 5) === 'image') {
-        setImgFile(file);
-      } else {
-        setImgFile(null);
-      }
-    }
-  };
-  const onSubmit = () => {
-    const frm = new FormData();
-
-    const name = nickname ? nickname : data.nickname;
-    frm.append('nickname', name);
-    if (imgFile) {
-      frm.append('file', imgFile);
-    }
-    updateProfile(frm).then((res) => {
-      if (res.resultCode === 2000) {
-        dispatch(showModal({ message: '변경하였습니다', title: '완료' }));
-      }
-    });
+  const onChangeTab = (tab: '1' | '2') => {
+    setTab(tab);
   };
 
   return (
@@ -73,7 +26,12 @@ export default function MyPage() {
           <p className="text-2xl font-semibold">내 계정</p>
         </div>
         <ul className="mt-10">
-          <li className="flex items-center bg-slate-300 rounded-md p-3 hover:bg-slate-300 cursor-pointer">
+          <li
+            onClick={() => onChangeTab('1')}
+            className={`${
+              tab === '1' ? 'bg-slate-200' : null
+            } flex items-center rounded-md p-3 hover:bg-slate-300 cursor-pointer`}
+          >
             <span>
               <Image
                 priority
@@ -85,7 +43,12 @@ export default function MyPage() {
             </span>
             <span className="text-lg ml-3">회원정보</span>
           </li>
-          <li className="mt-3 flex items-center rounded-md p-3 hover:bg-slate-300 cursor-pointer">
+          <li
+            onClick={() => onChangeTab('2')}
+            className={`${
+              tab === '2' ? 'bg-slate-200' : null
+            } mt-3 flex items-center rounded-md p-3 hover:bg-slate-300 cursor-pointer`}
+          >
             <span>
               <Image
                 priority
@@ -95,89 +58,14 @@ export default function MyPage() {
                 alt="MoreButton"
               />
             </span>
-            <span className="text-lg ml-3">회원정보</span>
+            <span className="text-lg ml-3">활동내역</span>
           </li>
         </ul>
       </section>
-      <div className="border vertical md:block"></div>
+      <div className="mt-3 border vertical md:block"></div>
 
-      <section className="md:pl-20 basis-2/3">
-        <div>
-          <p className="mt-10 text-2xl font-semibold">회원정보</p>
-        </div>
-
-        <div className="md:flex">
-          {/* detail info */}
-          <div className="mt-10 basis-1/2">
-            <div>
-              <label className="label">
-                <span className="label-text">이메일</span>
-              </label>
-              <input
-                type="text"
-                placeholder={data?.email}
-                className="input input-bordered w-full max-w-sm font-bold"
-                disabled
-              />
-            </div>
-            <div className="mt-4">
-              <label className="label">
-                <span className="label-text">닉네임</span>
-              </label>
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => {
-                  setNickname(e.target.value);
-                }}
-                placeholder="Type here"
-                className="input input-bordered w-full max-w-sm"
-              />
-            </div>
-          </div>
-          {/* image */}
-          <div className="mt-10 basis-1/2 flex md:justify-end">
-            <div className="text-neutral-content w-32 h-32 lg:w-52 lg:h-52">
-              <img
-                className="cursor-pointer w-full h-full rounded-full"
-                onClick={onClickAvatar}
-                src={previewImage ? previewImage : data?.avatar}
-                alt={data?.nickname}
-              />
-              {/* <Image
-                  className="cursor-pointer rounded-full"
-                  priority
-                  src={
-                    previewImage
-                      ? previewImage
-                      : data?.avatar
-                      ? data?.avatar
-                      : '/images/profile_default.svg'
-                  }
-                  height={170}
-                  width={170}
-                  alt="MoreButton"
-                  onClick={onClickAvatar}
-                /> */}
-            </div>
-            <input
-              name="img"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              ref={fileInput}
-              onChange={fileChange}
-            />
-          </div>
-        </div>
-        <div className="md:text-right mt-10">
-          <button
-            onClick={onSubmit}
-            className="mt-4 btn btn-info btn-sm text-white px-10"
-          >
-            저장
-          </button>
-        </div>
+      <section className={`${tab === '1' ? 'md:pl-20' : null} basis-2/3`}>
+        {tab === '1' ? <UserInfo /> : <Activities />}
       </section>
       <MessageModal />
     </main>

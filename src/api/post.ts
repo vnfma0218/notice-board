@@ -123,3 +123,35 @@ export const updateComment = async (commentId: string, text: string) => {
     return error.response.data;
   }
 };
+// 게시글 좋아요
+export const postLike = async (postId: string) => {
+  try {
+    const res = await axiosInstance<IPost>({
+      url: `/post/like`,
+      method: 'post',
+      withCredentials: true,
+      data: {
+        postId,
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};
+// 게시글 좋아요 취소
+export const deleteLike = async (postId: string) => {
+  try {
+    const res = await axiosInstance<IPost>({
+      url: `/post/like`,
+      method: 'delete',
+      withCredentials: true,
+      data: {
+        postId,
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};

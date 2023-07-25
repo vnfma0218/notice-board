@@ -83,7 +83,12 @@ export default function NewBoard() {
           />
         </div>
         <div className="flex justify-end mt-14 ">
-          <button className="btn btn-outline border-gray-300 px-7 btn-sm mr-3">
+          <button
+            onClick={() => {
+              router.back();
+            }}
+            className="btn btn-outline border-gray-300 px-7 btn-sm mr-3"
+          >
             취소
           </button>
 

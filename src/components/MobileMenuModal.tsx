@@ -36,13 +36,8 @@ const MobileMenuModal = () => {
           <p className="text-xl">Welcome!</p>
           <div className="modal-action mt-0">
             {/* if there is a button, it will close the modal */}
-            <button ref={closeBtnRef} className="btn cursor-pointer">
-              <Image
-                src="./images/close.svg"
-                height={20}
-                width={20}
-                alt={'closeBtn'}
-              />
+            <button ref={closeBtnRef} className="btn cursor-pointer text-xl">
+              X
             </button>
           </div>
         </div>
