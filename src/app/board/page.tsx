@@ -84,6 +84,7 @@ export default function BoardPage() {
     <main className="max-w-3xl m-auto px-10">
       <div className="mt-20 mb-10">
         {/* TODO 로그인 여부에 따라 Rendering 하기 */}
+
         <button
           onClick={clickWritePostBtn}
           className="btn btn-info px-7 btn-sm text-white"
@@ -92,8 +93,32 @@ export default function BoardPage() {
         </button>
       </div>
       {isLoading ? (
-        <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2"></span>
+        <>
+          {Array.from({ length: 3 }).map((_, idx) => {
+            return (
+              <div key={idx}>
+                <div className="flex items-center">
+                  <div
+                    data-placeholder
+                    className="mb-2 h-14 w-14 rounded-full overflow-hidden relative bg-gray-200"
+                  ></div>
+                  <div
+                    data-placeholder
+                    className="mb-2 ml-2 h-6 w-12  overflow-hidden relative bg-gray-200"
+                  ></div>
+                </div>
+
+                <div
+                  data-placeholder
+                  className="mb-2 h-14 w-full overflow-hidden relative bg-gray-200"
+                ></div>
+              </div>
+            );
+          })}
+        </>
       ) : null}
+      {/* TODO 스켈레톤 ui */}
+
       {data?.results.length ? <PostList posts={data.results} /> : null}
       {data?.results.length ? (
         <ReactPaginate
