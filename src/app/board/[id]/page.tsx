@@ -27,7 +27,6 @@ export default function BoardDetailPage({
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const [selectedCommentId, setSelectedCommentId] = useState('');
   const { data, isLoading, mutate } = useSWR(`/post/${params.id}`, () =>
     getPostDetail(params.id)
   );
@@ -35,20 +34,18 @@ export default function BoardDetailPage({
     mutate();
   };
   const onShowDelCommentModal = (commentId: string) => {
-    setSelectedCommentId(commentId);
-
     dispatch(
       showModal({
         title: '삭제',
         message: '정말 삭제하시겠습니까?',
         hasConfirm: true,
-        confirmCallback: onConfirmDeleteComment,
+        confirmCallback: () => onConfirmDeleteComment(commentId),
       })
     );
   };
-  const onConfirmDeleteComment = () => {
-    if (!selectedCommentId) return;
-    deleteComment(selectedCommentId, params.id).then((res) => {
+  const onConfirmDeleteComment = (commentId: string) => {
+    if (!commentId) return;
+    deleteComment(commentId, params.id).then((res) => {
       console.log(res);
       if (res.resultCode === 2000) {
         mutate();

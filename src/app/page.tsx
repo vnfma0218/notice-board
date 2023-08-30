@@ -5,6 +5,7 @@ import { increment } from '@/redux/features/counter/counterSlice';
 export default function Home() {
   const count = useAppSelector((state) => state.counterReducer.value);
   const dispatch = useAppDispatch();
+
   return (
     <main className="">
       <h1>home</h1>

@@ -11,7 +11,7 @@ const UserInfo = () => {
   const fileInput = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>('');
   const [nickname, setNickname] = useState<string>('');
-  const { data, error } = useSWR('/profile', () => getProfile());
+  const { data } = useSWR('/profile', () => getProfile());
 
   useEffect(() => {
     if (data?.nickname) {

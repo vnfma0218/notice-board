@@ -6,12 +6,15 @@ import { useAppDispatch } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useCookies } from 'react-cookie';
 
 interface ILoginForm {
   email: string;
   password: string;
 }
 export default function LoginPage() {
+  const [cookies, setCookie] = useCookies(['token']);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
   const {
@@ -35,7 +38,9 @@ export default function LoginPage() {
         setCustomErrors((prev) => ({ ...prev, hasError: false }));
         mutate();
         dispatch(setLoggedIn());
+        setCookie('token', res.accessToken);
         router.push('/');
+        console.log(res);
       }
     });
   };

@@ -4,8 +4,14 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import Avatar from './Avatar';
 import MobileMenuModal from './MobileMenuModal';
+import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { setLoggedIn } from '@/redux/features/user/userSlice';
 
 const Header = () => {
+  const [cookies] = useCookies(['token']);
+
+  const [showMenuModal, setShowMenuModal] = useState(false);
   const isLogin = useAppSelector((state) => state.userReducer.isLoggedIn);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -13,8 +19,16 @@ const Header = () => {
     router.push('/login');
   };
   const showFullModal = () => {
+    setShowMenuModal(true);
     window.mobile_modal.showModal();
   };
+
+  useEffect(() => {
+    if (cookies.token) {
+      dispatch(setLoggedIn());
+    }
+  }, []);
+
   return (
     <header className="flex justify-between items-center px-10 py-5 max-w-5xl m-auto">
       <p className="text-gray-700 font-bold text-xl">Welcome!</p>
@@ -58,7 +72,8 @@ const Header = () => {
           )}
         </ul>
       </nav>
-      <MobileMenuModal />
+
+      {showMenuModal ? <MobileMenuModal /> : null}
     </header>
   );
 };

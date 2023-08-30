@@ -118,7 +118,6 @@ export default function BoardPage() {
         </>
       ) : null}
       {/* TODO 스켈레톤 ui */}
-
       {data?.results.length ? <PostList posts={data.results} /> : null}
       {data?.results.length ? (
         <ReactPaginate

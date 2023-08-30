@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { getProfile } from '@/api/user';
 import { useEffect, useState } from 'react';
+
 interface IUserProfile {
   avatar: string;
   email: string;
@@ -19,7 +20,6 @@ const Avatar = ({ pageInfo }: { pageInfo?: 'modal' }) => {
     getProfile().then((res) => {
       if (res.nickname) {
         setProfile(res);
-        dispatch(setLoggedIn());
       }
     });
   }, []);
