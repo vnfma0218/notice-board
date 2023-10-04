@@ -1,17 +1,19 @@
 'use client';
 import useSWR from 'swr';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { getPostList } from '@/api/post';
 import PostList from '@/components/board/PostList';
 import ReactPaginate from 'react-paginate';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import MessageModal from '@/components/MessageModal';
 import { showModal } from '@/redux/features/modal/modalSlice';
+import { SearchTypes } from '@/lib/types';
 
 interface IPageInfo {
   page: number;
   limit: number;
+  type: SearchTypes;
 }
 
 export default function BoardPage() {
@@ -21,44 +23,79 @@ export default function BoardPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams()!;
-  const search = searchParams.get('page');
+
+  const queryPage = searchParams.get('page');
+  const querySort = searchParams.get('sort');
+
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
+      params.delete('page');
+      params.delete('sort');
       params.set(name, value);
-
+      console.log('params', params.toString());
       return params.toString();
     },
     [searchParams]
   );
+
   const [searchParam, setSearchParam] = useState<IPageInfo | null>({
     page: 1,
     limit: 5,
+    type: SearchTypes.asc,
   });
+
   const { data, isLoading } = useSWR(
     searchParam ? ['/posts', searchParam] : null,
     () => getPostList(searchParam!)
   );
 
   useEffect(() => {
-    if (search) {
+    if (queryPage || querySort) {
+      console.log('querySort', querySort);
       setSearchParam(null);
       setSearchParam((prev) => ({
         ...prev!,
-        page: search ? Number(search) : 1,
+        page: queryPage ? Number(queryPage) : 1,
+        type: querySort ? (querySort as SearchTypes) : SearchTypes.asc,
       }));
     }
-  }, [search]);
+  }, [queryPage, querySort]);
 
   const onPageChange = (page: number) => {
     if (page + 1 > 1) {
       router.push(
-        pathname + '?' + createQueryString('page', (page + 1).toString())
+        pathname +
+          '?' +
+          createQueryString('sort', searchParam?.type ?? '') +
+          '&' +
+          createQueryString('page', (page + 1).toString())
       );
     } else {
-      router.push(pathname + '?' + createQueryString('page', '1'));
+      router.push(
+        pathname +
+          '?' +
+          createQueryString('sort', searchParam?.type ?? '') +
+          '&' +
+          createQueryString('page', '1')
+      );
     }
     setSearchParam((prev) => ({ ...prev!, page: page + 1 }));
+  };
+
+  const onSearchOptionChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSearchParam((prev) => ({
+      ...prev!,
+      type: e.target.value as SearchTypes,
+    }));
+
+    router.push(
+      pathname +
+        '?' +
+        createQueryString('sort', e.target.value) +
+        '&' +
+        createQueryString('page', '1')
+    );
   };
 
   const clickWritePostBtn = () => {
@@ -82,21 +119,28 @@ export default function BoardPage() {
 
   return (
     <main className="max-w-3xl m-auto px-10">
-      <div className="mt-20 mb-10">
-        {/* TODO 로그인 여부에 따라 Rendering 하기 */}
-
+      <div className="flex justify-between items-center mt-20 mb-10">
         <button
           onClick={clickWritePostBtn}
-          className="btn btn-info px-7 btn-sm text-white"
+          className="btn btn-info px-7 btn-md text-white"
         >
           작성하기
         </button>
+        <select
+          value={searchParam?.type}
+          onChange={onSearchOptionChange}
+          className="select select-bordered select-sm max-w-xs"
+        >
+          <option value="asc">최신순</option>
+          <option value="desc">등록순</option>
+          <option value="likeCount">좋아요순</option>
+        </select>
       </div>
       {isLoading ? (
         <>
-          {Array.from({ length: 3 }).map((_, idx) => {
+          {Array.from({ length: 5 }).map((_, idx) => {
             return (
-              <div key={idx}>
+              <div key={idx} className="mb-4">
                 <div className="flex items-center">
                   <div
                     data-placeholder

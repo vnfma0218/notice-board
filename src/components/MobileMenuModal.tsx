@@ -1,7 +1,5 @@
 'use client';
 import useSWR from 'swr';
-
-import Image from 'next/image';
 import Avatar from './Avatar';
 import { getProfile } from '@/api/user';
 import { useDispatch } from 'react-redux';
@@ -9,12 +7,14 @@ import { setLogout } from '@/redux/features/user/userSlice';
 import { logout } from '@/api/login';
 import { usePathname, useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useAppSelector } from '@/redux/hooks';
+import { useCookies } from 'react-cookie';
 
 const authRoutes = ['/login', '/signup'];
 const MobileMenuModal = () => {
   const pathName = usePathname();
-  const { data, error, mutate } = useSWR(
+  const [, , removeCookie] = useCookies(['token', 'refreshToken']);
+
+  const { data, mutate } = useSWR(
     authRoutes.findIndex((el) => el === pathName) === -1 ? '/profile' : null,
     () => getProfile()
   );
@@ -88,6 +88,8 @@ const MobileMenuModal = () => {
               <li
                 onClick={() => {
                   dispatch(setLogout());
+                  removeCookie('refreshToken', { path: '/' });
+                  removeCookie('token', { path: '/' });
                   closeBtnRef.current?.click();
                   logout().then(() => {
                     mutate();

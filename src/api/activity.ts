@@ -1,8 +1,7 @@
-import { PagingParamsType, PagingResponseType } from '@/lib/types';
-import { IPost } from '@/lib/types/post';
 import axiosInstance from './index';
 
 interface Activity {
+  id: string;
   text: string;
   post: {
     id: string;

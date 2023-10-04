@@ -1,4 +1,4 @@
-import { PagingParamsType, PagingResponseType } from '@/lib/types';
+import { PagingParamsType, PagingResponseType, SearchTypes } from '@/lib/types';
 import { IPost } from '@/lib/types/post';
 import axiosInstance from './index';
 
@@ -46,6 +46,7 @@ export const updatePost = async (data: {
 export const getPostList = async ({
   limit = 5,
   page = 1,
+  type = SearchTypes.asc,
 }: PagingParamsType): Promise<PagingResponseType<IPost[]>> => {
   try {
     const res = await axiosInstance<PagingResponseType<IPost[]>>({
@@ -54,6 +55,7 @@ export const getPostList = async ({
       params: {
         limit,
         page,
+        type,
       },
     });
     return res.data;

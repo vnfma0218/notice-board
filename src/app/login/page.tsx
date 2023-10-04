@@ -13,7 +13,7 @@ interface ILoginForm {
   password: string;
 }
 export default function LoginPage() {
-  const [cookies, setCookie] = useCookies(['token']);
+  const [_, setCookie] = useCookies(['token', 'refreshToken']);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -39,6 +39,7 @@ export default function LoginPage() {
         mutate();
         dispatch(setLoggedIn());
         setCookie('token', res.accessToken);
+        setCookie('refreshToken', res.refreshToken);
         router.push('/');
         console.log(res);
       }

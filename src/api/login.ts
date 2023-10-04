@@ -73,3 +73,18 @@ export const isLoggedIn = async () => {
     return error;
   }
 };
+
+// 토큰 재요청
+
+export const refresh = async () => {
+  try {
+    const res = await axiosInstance({
+      url: '/user/refresh',
+      method: 'get',
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error;
+  }
+};

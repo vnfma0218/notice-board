@@ -1,7 +1,6 @@
 'use client';
 import useSWR from 'swr';
 import { getRecentActivities } from '@/api/activity';
-import { useEffect } from 'react';
 import Link from 'next/link';
 
 const RecentActivities = () => {
@@ -9,18 +8,23 @@ const RecentActivities = () => {
   return (
     <ul>
       {data &&
-        data?.map((el) => (
-          <li>
-            <div className="flex justify-between items-center">
-              <p>{el.text}</p>
-              <span className="text-gray-400 text-sm">{el.createdAt}</span>
-            </div>
-            <Link href={`/board/${el.post.id}`} prefetch={false}>
-              <p className="mt-4 text-lg font-bold cursor-pointer hover:text-blue-400">
-                {el.post.title}
-              </p>
-            </Link>
-          </li>
+        data?.map((activity) => (
+          <>
+            <li key={activity.id}>
+              <div className="flex justify-between items-center">
+                <p>{activity.text}</p>
+                <span className="text-gray-400 text-sm min-w-[150px]">
+                  {activity.createdAt}
+                </span>
+              </div>
+              <Link href={`/board/${activity.post.id}`} prefetch={false}>
+                <p className="mt-4 text-lg font-bold cursor-pointer hover:text-blue-400">
+                  {activity.post.title}
+                </p>
+              </Link>
+            </li>
+            <div className="divider"></div>
+          </>
         ))}
     </ul>
   );

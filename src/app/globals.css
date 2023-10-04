@@ -25,10 +25,8 @@
 
 .pagination a {
   cursor: pointer;
-  padding: 12px;
-  border-radius: 50%;
-  border: 1px solid #02a4ea;
-  color: #3abef7;
+  border-radius: 5px;
+  padding: 8px 16px;
   margin-right: 10px;
 }
 
@@ -38,13 +36,13 @@
 }
 
 .pagination__link--active a {
-  color: #fff;
+  color: white;
   background: #3abef7;
 }
 
 .pagination__link--disabled a {
   color: rgb(198, 197, 202);
-  border: 1px solid rgb(198, 197, 202);
+  /* border: 1px solid rgb(198, 197, 202); */
 }
 
 /* react quill editor */

@@ -72,7 +72,7 @@ const UserInfo = () => {
               type="text"
               placeholder={data?.email}
               className="input input-bordered w-full max-w-sm font-bold"
-              disabled
+              readOnly
             />
           </div>
           <div className="mt-4">
